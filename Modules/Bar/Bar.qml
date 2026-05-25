@@ -47,11 +47,12 @@ PanelWindow {
             anchors.leftMargin: Style.marginM
             anchors.verticalCenter: parent.verticalCenter
             spacing: Style.marginS
+        }
 
-            Widgets.Text {
-                text: "nino-bar"
-                Layout.alignment: Qt.AlignVCenter
-            }
+        RowLayout {
+            id: centerSection
+            anchors.centerIn: parent
+            spacing: Tokens.space3
 
             Widgets.Workspaces {
                 screen: root.screen
