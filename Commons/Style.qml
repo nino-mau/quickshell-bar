@@ -8,6 +8,8 @@ import qs.Commons as Commons
 * Shared design tokens for the bar: sizing, spacing, animation, and colors.
 */
 Singleton {
+    id: root
+
     readonly property int barHeight: 50
     readonly property int barMarginT: Commons.Tokens.space5
     readonly property int barMarginX: Commons.Tokens.space5
@@ -39,6 +41,8 @@ Singleton {
 
     readonly property int animationFast: 140
     readonly property int animationNormal: 260
+    readonly property int animationSlow: 400
+    readonly property int animationVerySlow: 600
 
     readonly property color barBackground: Commons.Theme.withAlpha(Commons.Theme.bg0, 0.6)
     readonly property color capsuleBackground: "#20242c"
@@ -49,8 +53,11 @@ Singleton {
     readonly property color accent: "#8aadf4"
     readonly property color activeText: "#0f1117"
 
+    // Workspace widget
+
+    readonly property int workspacePillActiveWidth: 55
+    readonly property int workspacePillInactiveWidth: 35
+
     readonly property color workspacePillInactiveBg: Commons.Theme.bg2
     readonly property color workspacePillActiveBg: Commons.Theme.primary
-    readonly property int workspacePillActiveWidth: 45
-    readonly property int workspacePillInactiveWidth: 30
 }
