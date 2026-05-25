@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 
 /**
-* Primitive design tokens inspired by Tailwind's default scales.
+* Primitive design tokens
 */
 Singleton {
     readonly property int space0: 0
