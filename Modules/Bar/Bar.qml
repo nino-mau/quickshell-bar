@@ -1,33 +1,61 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Wayland
 import qs.Commons
 import qs.Modules.Bar.Widgets as Widgets
 
 /**
-* The content of the bar
+* The window and content for the bar on one screen.
 */
-Rectangle {
+PanelWindow {
     id: root
 
-    required property ShellScreen screen
+    color: "transparent"
 
-    color: Style.barBackground
+    readonly property bool isBottom: BarConfig.position === "bottom"
 
-    RowLayout {
-        id: leftSection
-        anchors.left: parent.left
-        anchors.leftMargin: Style.marginM
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: Style.marginS
+    WlrLayershell.namespace: "quickshell-bar-" + (screen ? screen.name : "unknown")
+    WlrLayershell.layer: WlrLayer.Top
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+    WlrLayershell.exclusionMode: BarConfig.exclusive ? ExclusionMode.Auto : ExclusionMode.Ignore
 
-        Widgets.Text {
-            text: "nino-bar"
-            Layout.alignment: Qt.AlignVCenter
-        }
+    anchors {
+        top: !root.isBottom
+        bottom: root.isBottom
+        left: true
+        right: true
+    }
 
-        Widgets.Workspaces {
-            screen: root.screen
+    margins {
+        top: Style.barMarginT
+        right: Style.barMarginX
+        left: Style.barMarginX
+    }
+
+    implicitHeight: Style.barHeight
+
+    Rectangle {
+        anchors.fill: parent
+        radius: Style.barRadius
+        color: Style.barBackground
+        clip: true
+
+        RowLayout {
+            id: leftSection
+            anchors.left: parent.left
+            anchors.leftMargin: Style.marginM
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: Style.marginS
+
+            Widgets.Text {
+                text: "nino-bar"
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            Widgets.Workspaces {
+                screen: root.screen
+            }
         }
     }
 }

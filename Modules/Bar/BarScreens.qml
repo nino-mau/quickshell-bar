@@ -12,7 +12,7 @@ Variants {
         id: barDelegate
         required property ShellScreen modelData
 
-        BarWindow {
+        Bar {
             screen: barDelegate.modelData
         }
     }
