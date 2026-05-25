@@ -25,4 +25,9 @@ Singleton {
     readonly property color grey2: "#9399b2"
     readonly property color primary: "#89b4fa"
     readonly property color border: "#313244"
+
+    function withAlpha(base: color, alpha: real): color {
+        const clampedAlpha = Math.max(0, Math.min(1, alpha));
+        return Qt.rgba(base.r, base.g, base.b, clampedAlpha);
+    }
 }

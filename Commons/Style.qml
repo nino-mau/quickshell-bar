@@ -40,7 +40,7 @@ Singleton {
     readonly property int animationFast: 140
     readonly property int animationNormal: 260
 
-    readonly property color barBackground: Qt.rgba(0.024, 0.024, 0.037, Commons.Tokens.opacity60)
+    readonly property color barBackground: Commons.Theme.withAlpha(Commons.Theme.bg0, 0.6)
     readonly property color capsuleBackground: "#20242c"
     readonly property color capsuleHover: "#2b313b"
     readonly property color border: "#343b47"
