@@ -23,6 +23,8 @@ Singleton {
     readonly property int marginM: Commons.Tokens.space2 + Commons.Tokens.spacePx
     readonly property int marginL: Commons.Tokens.space3
 
+    readonly property int gapDefault: Commons.Tokens.space4
+
     readonly property int radiusXS: Commons.Tokens.radiusXS
     readonly property int radiusSM: Commons.Tokens.radiusSM
     readonly property int radiusMD: Commons.Tokens.radiusMD
@@ -34,9 +36,10 @@ Singleton {
     readonly property int radiusFull: Commons.Tokens.radiusFull
     readonly property int borderWidth: Commons.Tokens.border1
     readonly property int radiusDefault: Commons.Tokens.radiusXL
+    readonly property int pillRadiusDefault: Commons.Tokens.radius2XL
 
     readonly property int fontSizeS: Commons.Tokens.textXS
-    readonly property int fontSizeM: 13
+    readonly property int fontSizeM: Commons.Tokens.textXS
     readonly property int fontSizeL: 15
 
     readonly property int animationFast: 140
@@ -44,7 +47,7 @@ Singleton {
     readonly property int animationSlow: 400
     readonly property int animationVerySlow: 600
 
-    readonly property color barBackground: Commons.Theme.withAlpha(Commons.Theme.bg0, 0.6)
+    readonly property color barBackground: Commons.Theme.withAlpha(Commons.Theme.bg1, 0.7)
     readonly property color capsuleBackground: "#20242c"
     readonly property color capsuleHover: "#2b313b"
     readonly property color border: "#343b47"
@@ -52,12 +55,4 @@ Singleton {
     readonly property color mutedText: "#8f98a8"
     readonly property color accent: "#8aadf4"
     readonly property color activeText: "#0f1117"
-
-    // Workspace widget
-
-    readonly property int workspacePillActiveWidth: 55
-    readonly property int workspacePillInactiveWidth: 35
-
-    readonly property color workspacePillInactiveBg: Commons.Theme.bg2
-    readonly property color workspacePillActiveBg: Commons.Theme.primary
 }

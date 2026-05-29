@@ -78,6 +78,7 @@ Singleton {
 
     readonly property int textXS: 12
     readonly property int textSM: 14
+    readonly property int textSMHalf: 15
     readonly property int textBase: 16
     readonly property int textLG: 18
     readonly property int textXL: 20

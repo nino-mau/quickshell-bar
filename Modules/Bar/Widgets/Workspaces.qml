@@ -9,8 +9,24 @@ import qs.Commons
 Item {
     id: root
 
+    // Style related propreties
+
+    readonly property var workspaceIcons: ["", "", "", "", ""]
+    readonly property int pillActiveWidth: 55
+    readonly property int pillInactiveWidth: pillActiveWidth - 23
+    readonly property int pillHeight: 23
+    readonly property int pillGap: Tokens.space2
+    readonly property int pillRadius: Tokens.radius2XL
+    readonly property int pillSizeAnimationDuration: Style.animationVerySlow
+    readonly property int pillColorAnimationDuration: Style.animationNormal
+    readonly property int iconFontSize: Tokens.textSMHalf
+    readonly property color pillActiveBg: Theme.primary
+    readonly property color pillInactiveBg: Theme.bg2
+    readonly property color iconActiveColor: Theme.bg0
+    readonly property color iconInactiveColor: root.pillInactiveBg
+
     required property ShellScreen screen
-    property int count: 5
+    property int pillCount: 5
 
     readonly property int activeWorkspaceId: {
         var monitor = Hyprland.monitorFor(root.screen);
@@ -19,8 +35,11 @@ Item {
         return Hyprland.focusedWorkspace ? Hyprland.focusedWorkspace.id : -1;
     }
 
-    implicitWidth: layout.implicitWidth
-    implicitHeight: Style.barHeight
+    function workspaceIcon(workspaceId: int): string {
+        if (workspaceId > 0 && workspaceId <= workspaceIcons.length)
+            return workspaceIcons[workspaceId - 1];
+        return workspaceId.toString();
+    }
 
     function workspaceExists(workspaceId) {
         var list = Hyprland.workspaces.values;
@@ -34,10 +53,10 @@ Item {
     RowLayout {
         id: layout
         anchors.centerIn: parent
-        spacing: Style.marginXS
+        spacing: root.pillGap
 
         Repeater {
-            model: root.count
+            model: root.pillCount
 
             delegate: MouseArea {
                 id: workspaceButton
@@ -48,17 +67,18 @@ Item {
                 readonly property bool active: root.activeWorkspaceId === workspaceButton.workspaceId
                 readonly property bool occupied: root.workspaceExists(workspaceButton.workspaceId)
 
-                property real pillWidth: workspaceButton.active ? Style.workspacePillActiveWidth : Style.workspacePillInactiveWidth
+                property real pillWidth: workspaceButton.active ? root.pillActiveWidth : root.pillInactiveWidth
+                property real pillHeight: root.pillHeight
+
                 property real pulse: 0
 
                 implicitWidth: pillWidth
-                implicitHeight: 25
+                implicitHeight: pillHeight
                 Layout.preferredWidth: workspaceButton.implicitWidth
                 Layout.preferredHeight: workspaceButton.implicitHeight
                 Layout.alignment: Qt.AlignVCenter
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-
                 onClicked: Hyprland.dispatch("workspace " + workspaceButton.workspaceId)
                 onActiveChanged: {
                     if (workspaceButton.active)
@@ -67,21 +87,21 @@ Item {
 
                 Behavior on pillWidth {
                     NumberAnimation {
-                        duration: Style.animationVerySlow
+                        duration: root.pillSizeAnimationDuration
                         easing.type: Easing.OutBack
                     }
                 }
 
                 Rectangle {
                     anchors.fill: parent
-                    radius: Style.radiusDefault
-                    color: workspaceButton.active ? Style.workspacePillActiveBg : (workspaceButton.containsMouse ? Style.workspacePillInactiveBg : "transparent")
-                    border.color: Style.border
-                    border.width: Style.borderWidth
+                    radius: root.pillRadius
+                    color: workspaceButton.active ? root.pillActiveBg : root.pillInactiveBg
+                    // border.color: Style.border
+                    // border.width: Style.borderWidth
 
                     Behavior on color {
                         ColorAnimation {
-                            duration: Style.animationNormal
+                            duration: root.pillColorAnimationDuration
                             easing.type: Easing.InOutQuad
                         }
                     }
@@ -92,7 +112,7 @@ Item {
                         height: parent.height + workspaceButton.pulse * 18
                         radius: width / 2
                         color: "transparent"
-                        border.color: Style.workspacePillActiveBg
+                        border.color: root.pillActiveBg
                         border.width: Math.max(1, Math.round(3 * (1 - workspaceButton.pulse)))
                         opacity: (1 - workspaceButton.pulse) * 0.55
                         visible: workspaceButton.pulse > 0
@@ -100,38 +120,37 @@ Item {
 
                     Text {
                         anchors.centerIn: parent
-                        text: workspaceButton.workspaceId
-                        color: workspaceButton.active ? Style.activeText : (workspaceButton.occupied ? Style.text : Style.mutedText)
-                        font.pixelSize: Style.fontSizeS
-                        font.weight: workspaceButton.active || workspaceButton.occupied ? Font.Bold : Font.Medium
+                        text: root.workspaceIcon(workspaceButton.workspaceId)
+                        color: workspaceButton.active ? root.iconActiveColor : root.iconInactiveColor
+                        font.pixelSize: root.iconFontSize
 
                         Behavior on color {
                             ColorAnimation {
-                                duration: Style.animationNormal
+                                duration: root.pillColorAnimationDuration
                                 easing.type: Easing.InOutQuad
                             }
                         }
                     }
                 }
 
-                // SequentialAnimation {
-                //     id: activationPulse
-                //
-                //     NumberAnimation {
-                //         target: workspaceButton
-                //         property: "pulse"
-                //         from: 0
-                //         to: 1
-                //         duration: Style.animationNormal
-                //         easing.type: Easing.OutCubic
-                //     }
-                //
-                //     PropertyAction {
-                //         target: workspaceButton
-                //         property: "pulse"
-                //         value: 0
-                //     }
-                // }
+                SequentialAnimation {
+                    id: activationPulse
+
+                    NumberAnimation {
+                        target: workspaceButton
+                        property: "pulse"
+                        from: 0
+                        to: 1
+                        duration: Style.animationNormal
+                        easing.type: Easing.OutCubic
+                    }
+
+                    PropertyAction {
+                        target: workspaceButton
+                        property: "pulse"
+                        value: 0
+                    }
+                }
             }
         }
     }
