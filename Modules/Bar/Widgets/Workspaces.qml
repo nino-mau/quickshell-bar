@@ -21,12 +21,14 @@ Item {
     readonly property int pillColorAnimationDuration: Style.animationNormal
     readonly property int iconFontSize: Tokens.textSMHalf
     readonly property color pillActiveBg: Theme.primary
-    readonly property color pillInactiveBg: Theme.bg2
+    readonly property color pillInactiveBg: Theme.bg3
     readonly property color iconActiveColor: Theme.bg0
     readonly property color iconInactiveColor: root.pillInactiveBg
 
     required property ShellScreen screen
     property int pillCount: 5
+
+    implicitWidth: layout.implicitWidth
 
     readonly property int activeWorkspaceId: {
         var monitor = Hyprland.monitorFor(root.screen);

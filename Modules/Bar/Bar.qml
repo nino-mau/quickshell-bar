@@ -52,10 +52,31 @@ PanelWindow {
         RowLayout {
             id: centerSection
             anchors.centerIn: parent
-            spacing: Tokens.space3
+            spacing: Style.barGap
+            height: parent.height
+
+            Widgets.Clock {
+                Layout.alignment: Qt.AlignVCenter
+            }
 
             Widgets.Workspaces {
                 screen: root.screen
+            }
+        }
+
+        RowLayout {
+            id: rightSection
+            anchors.right: parent.right
+            anchors.rightMargin: Style.barPaddingX
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: Style.marginS
+
+            Widgets.Tray {
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            Widgets.Audio {
+                Layout.alignment: Qt.AlignVCenter
             }
         }
     }
