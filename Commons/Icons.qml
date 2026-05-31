@@ -21,4 +21,10 @@ Singleton {
     readonly property string volumeLow: "󰖀"
     readonly property string volumeOff: "󰖁"
     readonly property string volumeMuted: "󰝟"
+
+    readonly property string wifiStrength4: "󰤨"
+    readonly property string wifiStrength3: "󰤥"
+    readonly property string wifiStrength2: "󰤢"
+    readonly property string wifiStrength1: "󰤟"
+    readonly property string wifiStrengthOff: "󰤭"
 }
