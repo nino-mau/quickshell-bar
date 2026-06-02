@@ -48,6 +48,9 @@ PanelWindow {
             anchors.verticalCenter: parent.verticalCenter
             spacing: Style.barGap
 
+            Widgets.Launcher {
+                Layout.alignment: Qt.AlignVCenter
+            }
             Widgets.MediaPlayer {
                 Layout.alignment: Qt.AlignVCenter
             }
