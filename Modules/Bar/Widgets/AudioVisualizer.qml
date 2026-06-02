@@ -9,9 +9,11 @@ Item {
 
     property bool active: true
     property string type: "mirrored"
-    property int spectrumBandCount: 32
+    property int spectrumBandCount: 30
     property real minimumLevel: 0.04
-    property color fillColor: Theme.withAlpha(Theme.blue, 0.35)
+    property real colorOpacity: 0.6
+    property color barColor: Theme.aqua
+    property color fillColor: Theme.withAlpha(barColor, colorOpacity)
 
     readonly property string componentId: "bar:media:visualizer"
     readonly property bool needsSpectrum: visible && active

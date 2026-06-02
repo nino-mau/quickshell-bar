@@ -46,14 +46,18 @@ PanelWindow {
             anchors.left: parent.left
             anchors.leftMargin: Style.marginM
             anchors.verticalCenter: parent.verticalCenter
-            spacing: Style.marginS
+            spacing: Style.barGap
+
+            Widgets.MediaPlayer {
+                Layout.alignment: Qt.AlignVCenter
+            }
         }
 
         RowLayout {
             id: centerSection
             anchors.centerIn: parent
-            spacing: Style.barGap
             height: parent.height
+            spacing: Tokens.space7
 
             Widgets.Clock {
                 Layout.alignment: Qt.AlignVCenter
@@ -69,7 +73,7 @@ PanelWindow {
             anchors.right: parent.right
             anchors.rightMargin: Style.barPaddingX
             anchors.verticalCenter: parent.verticalCenter
-            spacing: Style.marginS
+            spacing: Style.barGap
 
             Widgets.Tray {
                 Layout.alignment: Qt.AlignVCenter

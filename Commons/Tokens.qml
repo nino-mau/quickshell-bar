@@ -78,12 +78,14 @@ Singleton {
     readonly property real opacity100: 1.0
 
     readonly property int textXS: 12
+    readonly property int textXSHalf: 13
     readonly property int textSM: 14
     readonly property int textSMHalf: 15
     readonly property int textBase: 16
     readonly property int textLG: 18
     readonly property int textLGHalf: 19
     readonly property int textXL: 20
+    readonly property int textXLHalf: 22
     readonly property int text2XL: 24
     readonly property int text2XLHalf: 22
     readonly property int text3XL: 30

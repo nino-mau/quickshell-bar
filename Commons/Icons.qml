@@ -16,6 +16,8 @@ Singleton {
 
     // Material
 
+    readonly property string os: "󰣇"
+
     readonly property string volumeHigh: "󰕾"
     readonly property string volumeMedium: "󰖀"
     readonly property string volumeLow: "󰖀"
@@ -27,4 +29,11 @@ Singleton {
     readonly property string wifiStrength2: "󰤢"
     readonly property string wifiStrength1: "󰤟"
     readonly property string wifiStrengthOff: "󰤭"
+
+    readonly property string mediaPause: "󰏤"
+    readonly property string mediaNextFilled: "󰒭"
+    readonly property string mediaPrevFilled: "󰒮"
+    readonly property string mediaNext: "󰼧"
+    readonly property string mediaPrev: "󰼨"
+    readonly property string mediaPlay: "󰐊"
 }
