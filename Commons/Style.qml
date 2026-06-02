@@ -17,7 +17,7 @@ Singleton {
     readonly property int barPaddingX: 10
     readonly property int barMarginT: Commons.Tokens.space5
     readonly property int barMarginX: Commons.Tokens.space5
-    readonly property int barRadius: Commons.Tokens.radius2XL
+    readonly property int barRadius: Commons.Tokens.radiusLG
     readonly property int barGap: 9
     readonly property color barBackground: Commons.Theme.withAlpha(Commons.Theme.bg1, 0.80)
 

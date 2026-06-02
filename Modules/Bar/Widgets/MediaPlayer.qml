@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import qs.Commons
 import qs.Services as Services
@@ -32,7 +33,7 @@ MouseArea {
     readonly property int popupShadowPadding: Tokens.space3
     readonly property int popupAttachOverlap: Tokens.space2
     readonly property int popupReverseRadius: Style.radiusDefault
-    readonly property url popupImageSource: Qt.resolvedUrl("../../../Assets/placeholder.png")
+    readonly property url popupImageSource: Services.Media.artUrl
     readonly property color popupBackgroundColor: Theme.bg1
     readonly property color popupBorderColor: 'transparent'
 
@@ -51,6 +52,7 @@ MouseArea {
 
     onClicked: controlsPopup.toggle()
 
+    // Media pill
     Rectangle {
         id: pill
 
@@ -65,6 +67,7 @@ MouseArea {
         // color: 'transparent'
         clip: true
 
+        // Media audio visualizer in background
         AudioVisualizer {
             anchors.fill: parent
             anchors.margins: Tokens.space1
@@ -183,6 +186,7 @@ MouseArea {
                     onTriggered: titleClip.showNextText()
                 }
 
+                // Slide animation
                 SequentialAnimation {
                     id: textSlideAnimation
 
@@ -222,6 +226,7 @@ MouseArea {
         }
     }
 
+    // Media popup
     AttachedPopupWindow {
         id: controlsPopup
 
@@ -238,13 +243,13 @@ MouseArea {
             id: popupContent
 
             anchors.centerIn: parent
-            spacing: Tokens.space2
 
+            // Media art
             Image {
                 id: cover
 
-                Layout.preferredWidth: 140
-                Layout.preferredHeight: 78
+                Layout.preferredWidth: 190
+                Layout.preferredHeight: 108
                 Layout.alignment: Qt.AlignHCenter
                 source: root.popupImageSource
                 sourceSize.width: 280
@@ -252,11 +257,30 @@ MouseArea {
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
                 cache: false
+                layer.enabled: true
+                layer.smooth: true
+                layer.effect: MultiEffect {
+                    maskEnabled: true
+                    maskThresholdMin: 0
+                    maskSpreadAtMin: 0
+                    maskThresholdMax: 1
+                    maskSpreadAtMax: 0
+                    maskSource: ShaderEffectSource {
+                        sourceItem: Rectangle {
+                            width: cover.width
+                            height: cover.height
+                            radius: Tokens.radiusLG
+                            color: "white"
+                        }
+                    }
+                }
             }
 
+            // Media progress bar
             Item {
                 id: progressBar
 
+                Layout.topMargin: 8
                 Layout.fillWidth: true
                 Layout.preferredHeight: Tokens.space1
                 visible: Services.Media.hasProgress
@@ -284,12 +308,15 @@ MouseArea {
                 }
             }
 
+            // Media controls
             RowLayout {
                 id: controlsLayout
 
+                Layout.topMargin: 2
                 Layout.alignment: Qt.AlignHCenter
                 spacing: root.controlsGap
 
+                // Prev button
                 MouseArea {
                     id: prevButton
 
@@ -314,6 +341,7 @@ MouseArea {
                     }
                 }
 
+                // Pause button
                 MouseArea {
                     id: pauseButton
 
@@ -338,6 +366,7 @@ MouseArea {
                     }
                 }
 
+                // Next button
                 MouseArea {
                     id: nextButton
 
