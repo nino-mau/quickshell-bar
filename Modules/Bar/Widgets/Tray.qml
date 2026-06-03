@@ -10,8 +10,10 @@ import qs.Commons
 Item {
     id: root
 
+    // Style
+
     readonly property int itemSize: 22
-    readonly property int iconSize: Tokens.textXL
+    readonly property int iconSize: Tokens.textLGHalf
 
     implicitWidth: layout.implicitWidth
     implicitHeight: Style.barHeight

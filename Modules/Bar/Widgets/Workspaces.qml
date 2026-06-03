@@ -12,16 +12,16 @@ Item {
     // Style related propreties
 
     readonly property var workspaceIcons: ["", "", "", "", ""]
-    readonly property int pillActiveWidth: 55
-    readonly property int pillInactiveWidth: pillActiveWidth - 23
-    readonly property int pillHeight: 23
+    readonly property int pillActiveWidth: 52
+    readonly property int pillInactiveWidth: pillActiveWidth - 22
+    readonly property int pillHeight: 22
     readonly property int pillGap: Tokens.space2
     readonly property int pillRadius: Tokens.radius2XL
     readonly property int pillSizeAnimationDuration: Tokens.duration600
     readonly property int pillColorAnimationDuration: Tokens.duration260
     readonly property int iconFontSize: Tokens.textSMHalf
     readonly property color pillActiveBg: Theme.accent
-    readonly property color pillInactiveBg: Theme.surfaceHighlight
+    readonly property color pillInactiveBg: Theme.surfaceRaised
     readonly property color iconActiveColor: Theme.accentText
     readonly property color iconInactiveColor: root.pillInactiveBg
 
