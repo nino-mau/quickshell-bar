@@ -36,4 +36,18 @@ Singleton {
     readonly property string mediaNext: "󰼧"
     readonly property string mediaPrev: "󰼨"
     readonly property string mediaPlay: "󰐊"
+
+    // Weather
+
+    readonly property string weatherAlert: ""
+    readonly property string weatherSunny: ""
+    readonly property string weatherNight: ""
+    readonly property string weatherPartlyCloudy: ""
+    readonly property string weatherCloudy: ""
+    readonly property string weatherFog: ""
+    readonly property string weatherRainy: ""
+    readonly property string weatherPouring: ""
+    readonly property string weatherSnowy: ""
+    readonly property string weatherLightning: ""
+    readonly property string weatherHail: ""
 }

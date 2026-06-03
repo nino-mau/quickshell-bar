@@ -25,6 +25,8 @@ Singleton {
     readonly property int pillHeight: 31
     readonly property int pillIconSize: Commons.Tokens.textLG
     readonly property int pillRadius: Commons.Tokens.radiusFull
+    readonly property int pillTextSize: Commons.Tokens.textSM
+    readonly property int pillGap: Commons.Tokens.space2
     readonly property color pillText: Commons.Theme.text
     readonly property color pillBackground: Commons.Theme.surfaceRaised
     readonly property color pillHoverBackground: Commons.Theme.surfaceHover

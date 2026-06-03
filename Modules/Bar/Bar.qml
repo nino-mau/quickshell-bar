@@ -54,6 +54,9 @@ PanelWindow {
             Widgets.MediaPlayer {
                 Layout.alignment: Qt.AlignVCenter
             }
+            Widgets.Weather {
+                Layout.alignment: Qt.AlignVCenter
+            }
         }
 
         RowLayout {
