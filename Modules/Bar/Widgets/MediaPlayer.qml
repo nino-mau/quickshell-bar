@@ -18,7 +18,7 @@ MouseArea {
     readonly property int horizontalPadding: Tokens.space10
     readonly property int minWidth: 150
 
-    readonly property int controlButtonSize: Tokens.textXLHalf + 1
+    readonly property int controlButtonSize: Tokens.text3XL
     readonly property int controlsGap: Tokens.space2
 
     readonly property real audioVisualizerOpacity: 0.5
