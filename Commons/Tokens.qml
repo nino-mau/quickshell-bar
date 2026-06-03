@@ -115,10 +115,14 @@ Singleton {
 
     readonly property int duration75: 75
     readonly property int duration100: 100
+    readonly property int duration140: 140
     readonly property int duration150: 150
     readonly property int duration200: 200
+    readonly property int duration260: 260
     readonly property int duration300: 300
+    readonly property int duration400: 400
     readonly property int duration500: 500
+    readonly property int duration600: 600
     readonly property int duration700: 700
     readonly property int duration1000: 1000
 

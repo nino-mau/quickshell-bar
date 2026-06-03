@@ -16,13 +16,12 @@ MouseArea {
     hoverEnabled: true
     cursorShape: Qt.PointingHandCursor
 
-    Rectangle {
+    Pill {
         id: pill
+
         anchors.centerIn: parent
-        implicitWidth: Style.pillSize
-        implicitHeight: Style.pillSize
-        radius: Style.pillRadius
-        color: root.containsMouse ? Theme.withAlpha(Theme.primary, 0.25) : Theme.withAlpha(Theme.primary, 0.15)
+        implicitWidth: Style.pillHeight
+        hoverBackgroundColor: Style.pillBackground
 
         Text {
             text: root.icon
@@ -30,16 +29,9 @@ MouseArea {
             // Correct nerd font icons not being centered properly
             anchors.horizontalCenterOffset: -1.2
             anchors.verticalCenterOffset: -0.5
-            color: Theme.primary
+            color: Style.pillText
             font.family: Style.iconFontFamily
             font.pixelSize: Style.pillIconSize
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration: Style.animationFast
-                easing.type: Easing.InOutQuad
-            }
         }
     }
 }

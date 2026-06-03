@@ -20,7 +20,7 @@ Item {
         anchors.centerIn: parent
         font.family: Style.defaultFontFamily
         text: Qt.formatDateTime(clock.date, root.format)
-        color: Style.textDefault
+        color: Theme.text
         font.pixelSize: Tokens.textBase
         font.weight: Tokens.fontMedium
     }

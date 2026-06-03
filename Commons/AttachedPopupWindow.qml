@@ -13,13 +13,13 @@ PopupWindow {
     property int popupContentHeight: 0
     property int shadowPadding: Commons.Tokens.space3
     property int attachOverlap: Commons.Tokens.space2
-    property int reverseRadius: Commons.Style.radiusDefault
+    property int reverseRadius: Commons.Style.popupRadius
     property color backgroundColor: Commons.Style.barBackground
     property color borderColor: Commons.Theme.withAlpha(Commons.Theme.bg4, 0.65)
     property real openScale: 0.94
 
     readonly property real effectiveReverseRadius: Math.min(reverseRadius, popupContentWidth / 2, popupContentHeight / 2)
-    readonly property real effectiveBottomRadius: Math.min(Commons.Style.radiusDefault, popupContentWidth / 2, popupContentHeight / 2)
+    readonly property real effectiveBottomRadius: Math.min(Commons.Style.popupRadius, popupContentWidth / 2, popupContentHeight / 2)
 
     anchor.edges: Edges.Bottom
     anchor.gravity: Edges.Bottom
@@ -158,24 +158,24 @@ PopupWindow {
             Rectangle {
                 x: root.effectiveReverseRadius
                 y: root.effectiveReverseRadius
-                width: Commons.Style.borderWidth
+                width: Commons.Style.popupBorderWidth
                 height: root.popupContentHeight - root.effectiveReverseRadius - root.effectiveBottomRadius
                 color: root.borderColor
             }
 
             Rectangle {
-                x: root.effectiveReverseRadius + root.popupContentWidth - Commons.Style.borderWidth
+                x: root.effectiveReverseRadius + root.popupContentWidth - Commons.Style.popupBorderWidth
                 y: root.effectiveReverseRadius
-                width: Commons.Style.borderWidth
+                width: Commons.Style.popupBorderWidth
                 height: root.popupContentHeight - root.effectiveReverseRadius - root.effectiveBottomRadius
                 color: root.borderColor
             }
 
             Rectangle {
                 x: root.effectiveReverseRadius + root.effectiveBottomRadius
-                y: root.popupContentHeight - Commons.Style.borderWidth
+                y: root.popupContentHeight - Commons.Style.popupBorderWidth
                 width: root.popupContentWidth - root.effectiveBottomRadius * 2
-                height: Commons.Style.borderWidth
+                height: Commons.Style.popupBorderWidth
                 color: root.borderColor
             }
         }
@@ -187,7 +187,7 @@ PopupWindow {
                 target: popupSurface
                 from: 0
                 to: 1
-                duration: Commons.Style.animationFast
+                duration: Commons.Tokens.duration140
                 easing.type: Easing.OutCubic
             }
 
@@ -195,7 +195,7 @@ PopupWindow {
                 target: popupSurface
                 from: root.openScale
                 to: 1
-                duration: Commons.Style.animationFast
+                duration: Commons.Tokens.duration140
                 easing.type: Easing.OutCubic
             }
         }

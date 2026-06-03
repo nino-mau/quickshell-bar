@@ -32,9 +32,9 @@ MouseArea {
     readonly property int popupVerticalPadding: Tokens.space2
     readonly property int popupShadowPadding: Tokens.space3
     readonly property int popupAttachOverlap: Tokens.space2
-    readonly property int popupReverseRadius: Style.radiusDefault
+    readonly property int popupReverseRadius: Style.popupRadius
     readonly property url popupImageSource: Services.Media.artUrl
-    readonly property color popupBackgroundColor: Theme.bg1
+    readonly property color popupBackgroundColor: Theme.surface
     readonly property color popupBorderColor: 'transparent'
 
     implicitWidth: hasMedia ? pill.implicitWidth : 0
@@ -53,7 +53,7 @@ MouseArea {
     onClicked: controlsPopup.toggle()
 
     // Media pill
-    Rectangle {
+    Pill {
         id: pill
 
         readonly property real textWidth: Math.min(Math.max(titleMetrics.width, artistMetrics.width), root.maxTextWidth) + root.horizontalPadding * 2
@@ -61,9 +61,8 @@ MouseArea {
 
         anchors.centerIn: parent
         implicitWidth: preferredWidth
-        implicitHeight: Style.pillSize
-        radius: Style.pillRadius
-        color: Theme.withAlpha(Theme.aqua, 0.15)
+        backgroundColor: Theme.withAlpha(Theme.aqua, 0.15)
+        hoverBackgroundColor: backgroundColor
         // color: 'transparent'
         clip: true
 
@@ -195,7 +194,7 @@ MouseArea {
                         property: "slideProgress"
                         from: 0
                         to: 1
-                        duration: Style.animationVerySlow + 150
+                        duration: Tokens.duration600 + Tokens.duration150
                         easing.type: Easing.InOutQuad
                     }
 
@@ -211,17 +210,10 @@ MouseArea {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: Style.animationFast
+                        duration: Tokens.duration140
                         easing.type: Easing.InOutQuad
                     }
                 }
-            }
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration: Style.animationFast
-                easing.type: Easing.InOutQuad
             }
         }
     }
@@ -249,6 +241,8 @@ MouseArea {
                 id: cover
 
                 Layout.preferredWidth: 190
+                Layout.topMargin: 8
+                Layout.bottomMargin: 8
                 Layout.preferredHeight: 108
                 Layout.alignment: Qt.AlignHCenter
                 source: root.popupImageSource
@@ -280,7 +274,6 @@ MouseArea {
             Item {
                 id: progressBar
 
-                Layout.topMargin: 8
                 Layout.fillWidth: true
                 Layout.preferredHeight: Tokens.space1
                 visible: Services.Media.hasProgress
@@ -288,7 +281,7 @@ MouseArea {
                 Rectangle {
                     anchors.fill: parent
                     radius: height / 2
-                    color: Theme.withAlpha(Style.pillText, 0.16)
+                    color: Theme.withAlpha(Theme.text, 0.16)
                 }
 
                 Rectangle {
@@ -301,7 +294,7 @@ MouseArea {
 
                     Behavior on width {
                         NumberAnimation {
-                            duration: Style.animationFast
+                            duration: Tokens.duration140
                             easing.type: Easing.InOutQuad
                         }
                     }

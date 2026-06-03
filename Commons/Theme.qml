@@ -23,8 +23,16 @@ Singleton {
     readonly property color grey0: "#6c7086"
     readonly property color grey1: "#7f849c"
     readonly property color grey2: "#9399b2"
-    readonly property color primary: "#89b4fa"
-    readonly property color border: "#313244"
+
+    readonly property color surface: bg1
+    readonly property color surfaceRaised: bg2
+    readonly property color surfaceHighlight: bg3
+    readonly property color surfaceHover: withAlpha(surfaceRaised, 0.7)
+    readonly property color text: fg
+    readonly property color textMuted: grey0
+    readonly property color accent: blue
+    readonly property color accentText: bg0
+    readonly property color borderSubtle: "#343b47"
 
     function withAlpha(base: color, alpha: real): color {
         const clampedAlpha = Math.max(0, Math.min(1, alpha));

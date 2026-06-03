@@ -11,6 +11,8 @@ Item {
     property string type: "mirrored"
     property int spectrumBandCount: 30
     property real minimumLevel: 0.04
+    property real levelScale: 1.8
+    property real barWidthRatio: 0.8
     property real colorOpacity: 0.6
     property color barColor: Theme.aqua
     property color fillColor: Theme.withAlpha(barColor, colorOpacity)
@@ -58,11 +60,11 @@ Item {
             required property int index
 
             readonly property int valueIndex: root.mirrored ? (index < root.sourceCount ? root.sourceCount - 1 - index : index - root.sourceCount) : index
-            readonly property real rawLevel: root.values[valueIndex] ?? 0
+            readonly property real rawLevel: Math.min(1, (root.values[valueIndex] ?? 0) * root.levelScale)
             readonly property real level: Math.min(1, Math.max(root.minimumLevel, rawLevel))
             readonly property real slotWidth: root.totalBars > 0 ? root.width / root.totalBars : 0
 
-            width: Math.max(2, slotWidth * 0.55)
+            width: Math.max(2, slotWidth * root.barWidthRatio)
             height: Math.max(2, root.height * level)
             x: index * slotWidth + ((slotWidth - width) / 2)
             y: root.mirrored ? (root.height - height) / 2 : root.height - height
@@ -80,7 +82,7 @@ Item {
 
     Behavior on opacity {
         NumberAnimation {
-            duration: Style.animationFast
+            duration: Tokens.duration140
             easing.type: Easing.InOutQuad
         }
     }

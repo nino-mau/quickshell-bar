@@ -73,7 +73,7 @@ Item {
 
                     Behavior on opacity {
                         NumberAnimation {
-                            duration: Style.animationFast
+                            duration: Tokens.duration140
                             easing.type: Easing.InOutQuad
                         }
                     }

@@ -17,12 +17,12 @@ Item {
     readonly property int pillHeight: 23
     readonly property int pillGap: Tokens.space2
     readonly property int pillRadius: Tokens.radius2XL
-    readonly property int pillSizeAnimationDuration: Style.animationVerySlow
-    readonly property int pillColorAnimationDuration: Style.animationNormal
+    readonly property int pillSizeAnimationDuration: Tokens.duration600
+    readonly property int pillColorAnimationDuration: Tokens.duration260
     readonly property int iconFontSize: Tokens.textSMHalf
-    readonly property color pillActiveBg: Theme.primary
-    readonly property color pillInactiveBg: Theme.bg3
-    readonly property color iconActiveColor: Theme.bg0
+    readonly property color pillActiveBg: Theme.accent
+    readonly property color pillInactiveBg: Theme.surfaceHighlight
+    readonly property color iconActiveColor: Theme.accentText
     readonly property color iconInactiveColor: root.pillInactiveBg
 
     required property ShellScreen screen
@@ -94,19 +94,14 @@ Item {
                     }
                 }
 
-                Rectangle {
+                Pill {
                     anchors.fill: parent
                     radius: root.pillRadius
-                    color: workspaceButton.active ? root.pillActiveBg : root.pillInactiveBg
-                    // border.color: Style.border
-                    // border.width: Style.borderWidth
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: root.pillColorAnimationDuration
-                            easing.type: Easing.InOutQuad
-                        }
-                    }
+                    colorAnimationDuration: root.pillColorAnimationDuration
+                    backgroundColor: workspaceButton.active ? root.pillActiveBg : root.pillInactiveBg
+                    hoverBackgroundColor: backgroundColor
+                    // border.color: Theme.borderSubtle
+                    // border.width: Tokens.border1
 
                     Rectangle {
                         anchors.centerIn: parent
@@ -143,7 +138,7 @@ Item {
                         property: "pulse"
                         from: 0
                         to: 1
-                        duration: Style.animationNormal
+                        duration: Tokens.duration260
                         easing.type: Easing.OutCubic
                     }
 

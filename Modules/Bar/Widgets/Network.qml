@@ -35,14 +35,12 @@ MouseArea {
         return Services.Network.networkName.length > 0;
     }
 
-    Rectangle {
+    Pill {
         id: pill
 
         anchors.centerIn: parent
         implicitWidth: layout.implicitWidth + 19
-        implicitHeight: Style.pillSize
-        radius: Style.pillRadius
-        color: root.containsMouse ? Style.pillHoverBackground : Style.pillBackground
+        hovered: root.containsMouse
 
         RowLayout {
             id: layout
@@ -53,7 +51,7 @@ MouseArea {
 
             Behavior on textSpacing {
                 NumberAnimation {
-                    duration: Style.animationNormal
+                    duration: Tokens.duration260
                     easing.type: Easing.InOutQuad
                 }
             }
@@ -66,7 +64,7 @@ MouseArea {
 
                 Behavior on color {
                     ColorAnimation {
-                        duration: Style.animationFast
+                        duration: Tokens.duration140
                         easing.type: Easing.InOutQuad
                     }
                 }
@@ -98,7 +96,7 @@ MouseArea {
 
                     Behavior on color {
                         ColorAnimation {
-                            duration: Style.animationFast
+                            duration: Tokens.duration140
                             easing.type: Easing.InOutQuad
                         }
                     }
@@ -106,24 +104,17 @@ MouseArea {
 
                 Behavior on textWidth {
                     NumberAnimation {
-                        duration: Style.animationNormal
+                        duration: Tokens.duration260
                         easing.type: Easing.InOutQuad
                     }
                 }
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: Style.animationFast
+                        duration: Tokens.duration140
                         easing.type: Easing.InOutQuad
                     }
                 }
-            }
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration: Style.animationFast
-                easing.type: Easing.InOutQuad
             }
         }
     }

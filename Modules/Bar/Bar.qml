@@ -28,7 +28,7 @@ PanelWindow {
     }
 
     margins {
-        top: Style.barMarginT
+        top: Style.barMarginTop
         right: Style.barMarginX
         left: Style.barMarginX
     }
@@ -44,7 +44,7 @@ PanelWindow {
         RowLayout {
             id: leftSection
             anchors.left: parent.left
-            anchors.leftMargin: Style.marginM
+            anchors.leftMargin: Style.barContentMarginX
             anchors.verticalCenter: parent.verticalCenter
             spacing: Style.barGap
 
