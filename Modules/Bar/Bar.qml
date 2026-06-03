@@ -57,6 +57,9 @@ PanelWindow {
             Widgets.Weather {
                 Layout.alignment: Qt.AlignVCenter
             }
+            Widgets.SystemMonitor {
+                Layout.alignment: Qt.AlignVCenter
+            }
         }
 
         RowLayout {

@@ -37,6 +37,10 @@ Singleton {
     readonly property string mediaPrev: "󰼨"
     readonly property string mediaPlay: "󰐊"
 
+    readonly property string memory: "󰍛"
+    readonly property string cpuTemp: "󰈸"
+    readonly property string cpuPerc: "󰊚"
+
     // Weather
 
     readonly property string weatherAlert: ""
