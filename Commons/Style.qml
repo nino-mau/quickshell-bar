@@ -10,8 +10,9 @@ import qs.Commons as Commons
 Singleton {
     id: root
 
-    readonly property string defaultFontFamily: "Maple Mono NF CN"
-    readonly property string iconFontFamily: "Symbols Nerd Font"
+    readonly property var fontFamilies: Qt.fontFamilies()
+    readonly property string defaultFontFamily: resolveDefaultFontFamily()
+    readonly property string iconFontFamily: firstAvailableFont(["Symbols Nerd Font", "Symbols Nerd Font Mono", "Symbols Nerd Font Propo"], firstNerdFontFamily())
 
     readonly property int barHeight: 50
     readonly property int barPaddingX: 10
@@ -33,4 +34,39 @@ Singleton {
 
     readonly property int popupRadius: Commons.Tokens.radiusXL
     readonly property int popupBorderWidth: Commons.Tokens.border1
+
+    function resolveDefaultFontFamily(): string {
+        const mapleFont = firstAvailableFont(["Maple Mono NF CN", "Maple Mono NF"], "");
+        if (mapleFont.length > 0) {
+            return mapleFont;
+        }
+
+        return firstNerdFontFamily();
+    }
+
+    function firstAvailableFont(names: var, fallback: string): string {
+        for (const name of names) {
+            if (fontFamilies.indexOf(name) !== -1) {
+                return name;
+            }
+        }
+
+        return fallback;
+    }
+
+    function firstNerdFontFamily(): string {
+        for (const family of fontFamilies) {
+            if (family.indexOf("Nerd Font") !== -1 && family.indexOf("Mono") !== -1) {
+                return family;
+            }
+        }
+
+        for (const family of fontFamilies) {
+            if (family.indexOf("Nerd Font") !== -1) {
+                return family;
+            }
+        }
+
+        return "";
+    }
 }
