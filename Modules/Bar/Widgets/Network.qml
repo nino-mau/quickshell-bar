@@ -44,7 +44,7 @@ MouseArea {
 
         RowLayout {
             id: layout
-            property real textSpacing: root.showNetworkText() ? Tokens.space2 : 0
+            property real textSpacing: root.showNetworkText() ? Style.pillGap : 0
 
             anchors.centerIn: parent
             spacing: textSpacing

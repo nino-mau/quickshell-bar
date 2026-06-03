@@ -79,7 +79,7 @@ MouseArea {
 
         RowLayout {
             id: layout
-            property real textSpacing: root.showVolumeText() ? Tokens.space2 : 0
+            property real textSpacing: root.showVolumeText() ? Style.pillGap : 0
 
             anchors.centerIn: parent
             spacing: textSpacing
