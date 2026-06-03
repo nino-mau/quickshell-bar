@@ -100,32 +100,18 @@ Singleton {
         return cleanText(candidate?.trackTitle ?? "").length > 0 || cleanText(candidate?.trackArtist ?? "").length > 0;
     }
 
-    function findArtUrl(candidate: var): string {
-        if (!candidate) {
+    function findArtUrl(player: MprisPlayer): string {
+        if (!player)
             return "";
-        }
+        if (player.trackArtUrl)
+            return player.trackArtUrl;
 
-        const trackArtUrl = cleanText(candidate.trackArtUrl ?? "");
-        if (trackArtUrl.length > 0) {
-            return trackArtUrl;
+        const url = player.metadata["xesam:url"] ?? "";
+        if (url.startsWith("https://www.youtube.com/watch")) {
+            // Fallback for youtube
+            const id = url.match(/[?&]v=([\w-]{11})/)?.[1];
+            return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
         }
-
-        const metadata = candidate.metadata;
-        if (!metadata) {
-            return "";
-        }
-
-        const metadataArtUrl = cleanText(metadata["mpris:artUrl"] ?? "");
-        if (metadataArtUrl.length > 0) {
-            return metadataArtUrl;
-        }
-
-        for (const key of Object.keys(metadata)) {
-            if (key === "mpris:artUrl") {
-                return cleanText(metadata[key] ?? "");
-            }
-        }
-
         return "";
     }
 
