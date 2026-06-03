@@ -1,9 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import qs.Commons
-import qs.Services as Services
 
 MouseArea {
     id: root
