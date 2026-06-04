@@ -70,7 +70,7 @@ MouseArea {
                 // Icon
                 Text {
                     text: Icons.memory
-                    color: Style.pillText
+                    color: root.usageColor(Services.SystemUsage.memPerc)
                     font.pixelSize: Style.pillIconSize
                 }
                 // Value
@@ -96,7 +96,7 @@ MouseArea {
                 // Icon
                 Text {
                     text: Icons.cpuTemp
-                    color: Style.pillText
+                    color: root.tempColor(Services.SystemUsage.cpuTemp)
                     font.pixelSize: Style.pillIconSize
                 }
 
@@ -123,7 +123,7 @@ MouseArea {
                 // Icon
                 Text {
                     text: Icons.cpuPerc
-                    color: Style.pillText
+                    color: root.usageColor(Services.SystemUsage.cpuPerc)
                     font.pixelSize: Style.pillIconSize
                 }
 
