@@ -62,6 +62,7 @@ MouseArea {
                 }
             }
 
+            // Network icon
             Text {
                 text: root.icon
                 color: Style.pillText
@@ -76,6 +77,7 @@ MouseArea {
                 }
             }
 
+            // Network text
             Item {
                 id: networkTextWrapper
 
