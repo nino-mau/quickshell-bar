@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import QtQuick.Layouts
 import qs.Commons
 import qs.Services as Services
@@ -33,10 +34,14 @@ MouseArea {
     cursorShape: Qt.PointingHandCursor
 
     onClicked: event => {
-        if (event.button === Qt.LeftButton)
+        const entry = DesktopEntries.heuristicLookup("wiremix");
+        if (entry) {
+            Quickshell.execDetached(["ghostty", "-e", "wiremix"]);
+        } else if (event.button === Qt.LeftButton) {
             Services.Audio.toggleMuted();
-        else
+        } else {
             Services.Audio.cycleNextSink();
+        }
     }
 
     onWheel: event => {

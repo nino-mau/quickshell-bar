@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import QtQuick.Layouts
 import qs.Commons
 import qs.Services as Services
@@ -27,12 +28,17 @@ MouseArea {
 
     implicitWidth: pill.implicitWidth
     implicitHeight: Style.barHeight
-    acceptedButtons: Qt.NoButton
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
     hoverEnabled: true
+    cursorShape: Qt.PointingHandCursor
     visible: Services.Network.wifiAvailable
 
     function showNetworkText(): bool {
         return Services.Network.networkName.length > 0;
+    }
+
+    onClicked: {
+        Quickshell.execDetached(["vicinae", "vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi"]);
     }
 
     Pill {

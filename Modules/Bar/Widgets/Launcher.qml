@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import Quickshell
 import QtQuick
 import qs.Commons
 
@@ -14,6 +15,10 @@ MouseArea {
     hoverEnabled: true
     cursorShape: Qt.PointingHandCursor
 
+    onClicked: {
+        Quickshell.execDetached(["vicinae", "toggle"]);
+    }
+
     Pill {
         id: pill
 
@@ -27,9 +32,16 @@ MouseArea {
             // Correct nerd font icons not being centered properly
             anchors.horizontalCenterOffset: -1.2
             anchors.verticalCenterOffset: -0.5
-            color: Style.pillText
+            color: root.containsMouse ? Theme.accent : Style.pillText
             font.family: Style.iconFontFamily
             font.pixelSize: Style.pillIconSize
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Tokens.duration140
+                    easing.type: Easing.InOutQuad
+                }
+            }
         }
     }
 }

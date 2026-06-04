@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import QtQuick.Layouts
 import qs.Commons
 import qs.Services as Services
@@ -15,14 +16,19 @@ MouseArea {
 
     implicitWidth: pill.implicitWidth
     implicitHeight: Style.barHeight
-    acceptedButtons: Qt.LeftButton
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
     hoverEnabled: true
     cursorShape: Qt.PointingHandCursor
 
     Component.onCompleted: Services.SystemUsage.registerComponent("bar:system-monitor")
     Component.onDestruction: Services.SystemUsage.unregisterComponent("bar:system-monitor")
 
-    onClicked: Services.SystemUsage.update()
+    onClicked: {
+        const entry = DesktopEntries.heuristicLookup("btop");
+        if (entry) {
+            Quickshell.execDetached(["ghostty", "-e", "btop"]);
+        }
+    }
 
     function usageColor(value: real): color {
         if (value >= criticalUsageThreshold) {
