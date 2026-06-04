@@ -10,6 +10,7 @@ MouseArea {
     id: root
 
     readonly property bool hasMedia: Services.Media.displayText.length > 0
+    property color baseColor: Style.pillDefaultBase
     // Interval at which the displayed title will change (alternate between title and artist)
     readonly property int mediaTitleChangeInterval: 15000
 
@@ -52,6 +53,14 @@ MouseArea {
 
     onClicked: controlsPopup.toggle()
 
+    function getMediaText(text: string): string {
+        if (Services.Media.isPlaying) {
+            return text;
+        } else {
+            return Icons.mediaPause + " " + text;
+        }
+    }
+
     // Media pill
     Pill {
         id: pill
@@ -61,8 +70,7 @@ MouseArea {
 
         anchors.centerIn: parent
         implicitWidth: preferredWidth
-        backgroundColor: Theme.withAlpha(Theme.aqua, 0.15)
-        hoverBackgroundColor: backgroundColor
+        baseColor: root.baseColor
         // color: 'transparent'
         clip: true
 
@@ -72,7 +80,7 @@ MouseArea {
             anchors.margins: Tokens.space1
             active: Services.Media.isPlaying
             colorOpacity: root.audioVisualizerOpacity
-            barColor: root.audioVisualizerColor
+            barColor: pill.textColor
         }
 
         // Media title
@@ -90,8 +98,8 @@ MouseArea {
                 readonly property bool hasArtistText: Services.Media.artist.length > 0
                 readonly property bool canAlternate: hasTitleText && hasArtistText && Services.Media.title !== Services.Media.artist
                 readonly property bool textVisible: root.hasMedia
-                readonly property string firstText: hasTitleText ? Services.Media.title : Services.Media.artist
-                readonly property string secondText: hasArtistText ? Services.Media.artist : Services.Media.title
+                readonly property string firstText: hasTitleText ? root.getMediaText(Services.Media.title) : root.getMediaText(Services.Media.artist)
+                readonly property string secondText: hasArtistText ? root.getMediaText(Services.Media.artist) : root.getMediaText(Services.Media.title)
                 readonly property real scrollDistance: Math.max(0, currentMediaText.implicitWidth - width)
                 readonly property int scrollPixelsPerSecond: 30
                 readonly property int scrollDuration: Math.round(scrollDistance / scrollPixelsPerSecond * 1000)
@@ -157,7 +165,7 @@ MouseArea {
                     x: titleClip.overflowing ? -titleClip.scrollOffset : (titleClip.width - implicitWidth) / 2
                     y: (titleClip.height - implicitHeight) / 2 + titleClip.slideProgress * titleClip.height
                     text: titleClip.currentText
-                    color: Style.pillText
+                    color: pill.textColor
                     font.family: Style.defaultFontFamily
                     font.pixelSize: root.titleTextSize
                     font.weight: root.titleTextFontWeight
@@ -170,7 +178,7 @@ MouseArea {
                     x: implicitWidth > titleClip.width ? 0 : (titleClip.width - implicitWidth) / 2
                     y: (titleClip.height - implicitHeight) / 2 - (1 - titleClip.slideProgress) * titleClip.height
                     text: titleClip.nextText
-                    color: Style.pillText
+                    color: pill.textColor
                     font.family: Style.defaultFontFamily
                     font.pixelSize: root.titleTextSize
                     font.weight: root.titleTextFontWeight
@@ -329,7 +337,7 @@ MouseArea {
                         text: Icons.mediaPrevFilled
                         font.family: Style.iconFontFamily
                         font.pixelSize: root.controlButtonSize - 4
-                        color: Style.pillText
+                        color: Theme.text
                         opacity: Services.Media.canGoPrevious ? 1 : 0.35
                     }
                 }
@@ -354,7 +362,7 @@ MouseArea {
                         text: Services.Media.isPlaying ? Icons.mediaPause : Icons.mediaPlay
                         font.family: Style.iconFontFamily
                         font.pixelSize: root.controlButtonSize
-                        color: Style.pillText
+                        color: Theme.text
                         opacity: Services.Media.canTogglePlaying || Services.Media.canPlay || Services.Media.canPause ? 1 : 0.35
                     }
                 }
@@ -379,7 +387,7 @@ MouseArea {
                         text: Icons.mediaNextFilled
                         font.family: Style.iconFontFamily
                         font.pixelSize: root.controlButtonSize - 4
-                        color: Style.pillText
+                        color: Theme.text
                         opacity: Services.Media.canGoNext ? 1 : 0.35
                     }
                 }

@@ -10,7 +10,25 @@ MouseArea {
     id: root
 
     readonly property int maxNetworkNameWidth: 140
-    readonly property string icon: {
+    readonly property string icon: getNetworkIcon()
+    property color baseColor: Style.pillDefaultBase
+
+    implicitWidth: pill.implicitWidth
+    implicitHeight: Style.barHeight
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
+    hoverEnabled: true
+    cursorShape: Qt.PointingHandCursor
+    visible: Services.Network.wifiAvailable
+
+    onClicked: {
+        Quickshell.execDetached(["vicinae", "vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi"]);
+    }
+
+    function showNetworkText(): bool {
+        return Services.Network.networkName.length > 0;
+    }
+
+    function getNetworkIcon(): string {
         if (!Services.Network.connected) {
             return Icons.wifiStrengthOff;
         }
@@ -26,27 +44,13 @@ MouseArea {
         return Icons.wifiStrength4;
     }
 
-    implicitWidth: pill.implicitWidth
-    implicitHeight: Style.barHeight
-    acceptedButtons: Qt.LeftButton | Qt.RightButton
-    hoverEnabled: true
-    cursorShape: Qt.PointingHandCursor
-    visible: Services.Network.wifiAvailable
-
-    function showNetworkText(): bool {
-        return Services.Network.networkName.length > 0;
-    }
-
-    onClicked: {
-        Quickshell.execDetached(["vicinae", "vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi"]);
-    }
-
     Pill {
         id: pill
 
         anchors.centerIn: parent
         implicitWidth: layout.implicitWidth + 19
         hovered: root.containsMouse
+        baseColor: root.baseColor
 
         RowLayout {
             id: layout
@@ -65,7 +69,7 @@ MouseArea {
             // Network icon
             Text {
                 text: root.icon
-                color: Style.pillText
+                color: pill.textColor
                 font.family: Style.iconFontFamily
                 font.pixelSize: Style.pillIconSize
 
@@ -97,7 +101,7 @@ MouseArea {
                     width: parent.width
                     text: Services.Network.networkName
                     elide: Text.ElideRight
-                    color: Style.pillText
+                    color: pill.textColor
                     font.family: Style.defaultFontFamily
                     font.pixelSize: Tokens.textSM
                     font.weight: Tokens.fontMedium

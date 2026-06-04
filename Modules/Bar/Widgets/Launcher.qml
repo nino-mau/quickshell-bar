@@ -8,6 +8,7 @@ MouseArea {
     id: root
 
     readonly property string icon: Icons.os
+    property color baseColor: Style.pillDefaultBase
 
     implicitWidth: pill.implicitWidth
     implicitHeight: Style.barHeight
@@ -24,7 +25,7 @@ MouseArea {
 
         anchors.centerIn: parent
         implicitWidth: Style.pillHeight
-        hoverBackgroundColor: Style.pillBackground
+        baseColor: root.baseColor
 
         Text {
             text: root.icon
@@ -32,7 +33,7 @@ MouseArea {
             // Correct nerd font icons not being centered properly
             anchors.horizontalCenterOffset: -1.2
             anchors.verticalCenterOffset: -0.5
-            color: root.containsMouse ? Theme.accent : Style.pillText
+            color: pill.textColor
             font.family: Style.iconFontFamily
             font.pixelSize: Style.pillIconSize
 

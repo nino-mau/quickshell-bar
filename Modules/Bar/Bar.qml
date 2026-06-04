@@ -15,6 +15,16 @@ PanelWindow {
 
     readonly property bool isBottom: BarConfig.position === "bottom"
 
+    // Widget colors
+
+    readonly property color launcherBaseColor: Theme.blue
+    readonly property color mediaBaseColor: Theme.aqua
+    readonly property color weatherBaseColor: Theme.red
+    readonly property color systemMonitorBaseColor: Style.pillDefaultBase
+    readonly property color bluetoothBaseColor: Style.pillDefaultBase
+    readonly property color networkBaseColor: Style.pillDefaultBase
+    readonly property color audioBaseColor: Style.pillDefaultBase
+
     WlrLayershell.namespace: "quickshell-bar-" + (screen ? screen.name : "unknown")
     WlrLayershell.layer: WlrLayer.Top
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
@@ -38,7 +48,7 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         radius: Style.barRadius
-        color: Style.barBackground
+        color: Theme.withAlpha(Style.barBackground, Style.barColorOpacity)
         clip: true
 
         RowLayout {
@@ -50,15 +60,19 @@ PanelWindow {
 
             Widgets.Launcher {
                 Layout.alignment: Qt.AlignVCenter
+                baseColor: root.launcherBaseColor
             }
             Widgets.MediaPlayer {
                 Layout.alignment: Qt.AlignVCenter
+                baseColor: root.mediaBaseColor
             }
             Widgets.Weather {
                 Layout.alignment: Qt.AlignVCenter
+                baseColor: root.weatherBaseColor
             }
             Widgets.SystemMonitor {
                 Layout.alignment: Qt.AlignVCenter
+                baseColor: root.systemMonitorBaseColor
             }
         }
 
@@ -90,14 +104,17 @@ PanelWindow {
 
             Widgets.Bluetooth {
                 Layout.alignment: Qt.AlignVCenter
+                baseColor: root.bluetoothBaseColor
             }
 
             Widgets.Network {
                 Layout.alignment: Qt.AlignVCenter
+                baseColor: root.networkBaseColor
             }
 
             Widgets.Audio {
                 Layout.alignment: Qt.AlignVCenter
+                baseColor: root.audioBaseColor
             }
         }
     }

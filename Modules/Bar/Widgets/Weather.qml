@@ -8,6 +8,8 @@ import qs.Services as Services
 MouseArea {
     id: root
 
+    property color baseColor: Style.pillDefaultBase
+
     implicitWidth: pill.implicitWidth
     implicitHeight: Style.barHeight
     acceptedButtons: Qt.LeftButton
@@ -22,6 +24,7 @@ MouseArea {
         anchors.centerIn: parent
         implicitWidth: layout.implicitWidth + Tokens.space4
         hovered: root.containsMouse
+        baseColor: root.baseColor
 
         RowLayout {
             id: layout
@@ -37,13 +40,15 @@ MouseArea {
                 }
             }
 
+            // Weather icon
             Text {
                 text: Services.Weather.icon
-                color: Style.pillText
+                color: pill.textColor
                 font.family: Style.iconFontFamily
                 font.pixelSize: Style.pillIconSize
             }
 
+            // Weather text
             Item {
                 id: temperatureWrapper
 
@@ -61,7 +66,7 @@ MouseArea {
 
                     anchors.verticalCenter: parent.verticalCenter
                     text: Services.Weather.temperatureText
-                    color: Style.pillText
+                    color: pill.textColor
                     font.family: Style.defaultFontFamily
                     font.pixelSize: Tokens.textSM
                     font.weight: Tokens.fontMedium

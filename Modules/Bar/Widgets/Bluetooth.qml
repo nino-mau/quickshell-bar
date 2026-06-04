@@ -9,8 +9,21 @@ import qs.Services as Services
 MouseArea {
     id: root
 
-    readonly property string icon: {
-        console.log(Services.Bluetooth.isDeviceAudio());
+    readonly property string icon: getBluetoothIcon()
+    property color baseColor: Style.pillDefaultBase
+
+    implicitWidth: pill.implicitWidth
+    implicitHeight: Style.barHeight
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
+    hoverEnabled: true
+    cursorShape: Qt.PointingHandCursor
+    visible: Services.Bluetooth.bluetoothAvailable
+
+    onClicked: event => {
+        Quickshell.execDetached(["vicinae", "vicinae://launch/@Gelei/store.vicinae.bluetooth/devices"]);
+    }
+
+    function getBluetoothIcon(params) {
         if (!Services.Bluetooth.bluetoothAvailable || !Services.Bluetooth.enabled || Services.Bluetooth.blocked) {
             return Icons.bluetoothOff;
         }
@@ -24,39 +37,6 @@ MouseArea {
         }
         return Icons.bluetoothOn;
     }
-    readonly property bool volumeChanging: volumeChangeTimer.running
-
-    implicitWidth: pill.implicitWidth
-    implicitHeight: Style.barHeight
-    acceptedButtons: Qt.LeftButton | Qt.RightButton
-    hoverEnabled: true
-    cursorShape: Qt.PointingHandCursor
-    visible: Services.Bluetooth.bluetoothAvailable
-
-    onClicked: event => {
-        Quickshell.execDetached(["vicinae", "vicinae://launch/@Gelei/store.vicinae.bluetooth/devices"]);
-    }
-
-    onWheel: event => {
-        if (event.angleDelta.y > 0)
-            Services.Audio.incrementVolume();
-        else if (event.angleDelta.y < 0)
-            Services.Audio.decrementVolume();
-    }
-
-    Connections {
-        target: Services.Audio
-
-        function onVolumeChanged(): void {
-            volumeChangeTimer.restart();
-        }
-    }
-
-    Timer {
-        id: volumeChangeTimer
-
-        interval: 700
-    }
 
     Pill {
         id: pill
@@ -64,6 +44,7 @@ MouseArea {
         anchors.centerIn: parent
         implicitWidth: layout.implicitWidth + 19
         hovered: root.containsMouse
+        baseColor: root.baseColor
 
         RowLayout {
             id: layout
@@ -79,9 +60,10 @@ MouseArea {
                 }
             }
 
+            // Bluetooth icon
             Text {
                 text: root.icon
-                color: Style.pillText
+                color: pill.textColor
                 font.family: Style.iconFontFamily
                 font.pixelSize: Style.pillIconSize
 
@@ -93,24 +75,25 @@ MouseArea {
                 }
             }
 
+            // Device name
             Item {
-                id: deviceTextWrapper
+                id: deviceNameWrapper
 
                 readonly property bool shown: pill.hovered
-                property real textWidth: shown ? deviceText.implicitWidth : 0
+                property real textWidth: shown ? deviceName.implicitWidth : 0
 
                 Layout.preferredWidth: textWidth
-                Layout.preferredHeight: deviceText.implicitHeight
+                Layout.preferredHeight: deviceName.implicitHeight
                 Layout.alignment: Qt.AlignVCenter
                 clip: true
                 opacity: shown ? 1 : 0
 
                 Text {
-                    id: deviceText
+                    id: deviceName
 
                     anchors.verticalCenter: parent.verticalCenter
                     text: Services.Bluetooth.activeDeviceName
-                    color: Style.pillText
+                    color: pill.textColor
                     font.family: Style.defaultFontFamily
                     font.pixelSize: Tokens.textSM
                     font.weight: Tokens.fontMedium
