@@ -2,19 +2,9 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import qs.Commons as Commons
 
 Singleton {
     id: root
-
-    // FA
-
-    // readonly property string volumeHigh: ""
-    // readonly property string volumeLow: ""
-    // readonly property string volumeOff: ""
-    // readonly property string volumeMuted: ""
-
-    // Material
 
     readonly property string os: "󰣇"
 
@@ -47,15 +37,6 @@ Singleton {
     readonly property string bluetoothSettings: "󰂳"
     readonly property string bluetoothConnect: "󰂱"
     readonly property string bluetoothTransfer: "󰂴"
-
-    // readonly property string bluetooth: "\u{f00af}"
-    // readonly property string bluetoothAudio: "\u{f00b0}"
-    // readonly property string bluetoothConnected: "\u{f00b1}"
-    // readonly property string bluetoothOff: "\u{f00b2}"
-    // readonly property string bluetoothSettings: "\u{f00b3}"
-    // readonly property string bluetoothTransfer: "\u{f00b4}"
-
-    // Weather
 
     readonly property string weatherAlert: ""
     readonly property string weatherSunny: ""
