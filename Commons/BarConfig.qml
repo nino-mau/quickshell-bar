@@ -7,5 +7,6 @@ import Quickshell
 */
 Singleton {
     property string position: "top"
+    property string theme: "catppuccin"
     property bool exclusive: true
 }
