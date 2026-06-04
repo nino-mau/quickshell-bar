@@ -88,6 +88,10 @@ PanelWindow {
                 Layout.alignment: Qt.AlignVCenter
             }
 
+            Widgets.Bluetooth {
+                Layout.alignment: Qt.AlignVCenter
+            }
+
             Widgets.Network {
                 Layout.alignment: Qt.AlignVCenter
             }
