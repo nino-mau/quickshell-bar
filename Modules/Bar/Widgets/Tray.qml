@@ -28,6 +28,10 @@ Item {
         item.display(window, position.x, position.y);
     }
 
+    function getTrayItems() {
+        return SystemTray.items.values.filter(trayItem => trayItem.title !== 'blueman');
+    }
+
     RowLayout {
         id: layout
         anchors.centerIn: parent
@@ -35,7 +39,7 @@ Item {
 
         Repeater {
             id: trayItems
-            model: SystemTray.items.values
+            model: root.getTrayItems()
 
             delegate: MouseArea {
                 id: trayButton
