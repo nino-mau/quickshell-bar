@@ -21,7 +21,7 @@ Singleton {
     readonly property int barContentMarginX: Commons.Tokens.space2 + Commons.Tokens.spacePx
     readonly property int barRadius: Commons.Tokens.radiusFull
     readonly property int barGap: 9
-    readonly property color barBackground: Commons.Theme.withAlpha(Commons.Theme.surface, 0.8)
+    readonly property color barBackground: Commons.Theme.withAlpha(Commons.Theme.surface, 0.85)
 
     readonly property int pillHeight: 31
     readonly property int pillIconSize: Commons.Tokens.textLG
