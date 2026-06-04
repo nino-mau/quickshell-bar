@@ -31,6 +31,7 @@ Singleton {
     readonly property color grey0: themeColor("grey0", "#6c7086")
     readonly property color grey1: themeColor("grey1", "#7f849c")
     readonly property color grey2: themeColor("grey2", "#9399b2")
+    readonly property color border: themeColor("border", "#313244")
 
     readonly property color surface: bg1
     readonly property color surfaceRaised: bg2
