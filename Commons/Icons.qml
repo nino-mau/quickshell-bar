@@ -41,6 +41,20 @@ Singleton {
     readonly property string cpuTemp: "󰈸"
     readonly property string cpuPerc: "󰊚"
 
+    readonly property string bluetoothOn: "󰂯"
+    readonly property string bluetoothAudio: "󰂰"
+    readonly property string bluetoothOff: "󰂲"
+    readonly property string bluetoothSettings: "󰂳"
+    readonly property string bluetoothConnect: "󰂱"
+    readonly property string bluetoothTransfer: "󰂴"
+
+    // readonly property string bluetooth: "\u{f00af}"
+    // readonly property string bluetoothAudio: "\u{f00b0}"
+    // readonly property string bluetoothConnected: "\u{f00b1}"
+    // readonly property string bluetoothOff: "\u{f00b2}"
+    // readonly property string bluetoothSettings: "\u{f00b3}"
+    // readonly property string bluetoothTransfer: "\u{f00b4}"
+
     // Weather
 
     readonly property string weatherAlert: ""
