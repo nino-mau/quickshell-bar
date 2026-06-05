@@ -369,6 +369,7 @@ Variants {
                                         elide: Text.ElideRight
                                         font.family: Style.defaultFontFamily
                                         font.pixelSize: Style.notificationToastAppTextSize
+                                        font.styleName: ""
                                         font.weight: Style.notificationToastAppFontWeight
                                     }
 
@@ -409,6 +410,7 @@ Variants {
                                     elide: Text.ElideRight
                                     font.family: Style.defaultFontFamily
                                     font.pixelSize: Style.notificationToastSummaryTextSize
+                                    font.styleName: ""
                                     font.weight: Style.notificationToastSummaryFontWeight
                                 }
 

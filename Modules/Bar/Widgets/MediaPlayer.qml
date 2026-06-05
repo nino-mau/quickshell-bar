@@ -27,16 +27,18 @@ MouseArea {
 
     readonly property int maxTextWidth: 150
     readonly property string titleTextSize: Tokens.textXSHalf
-    readonly property string titleTextFontWeight: Tokens.fontBold
+    readonly property string titleTextFontWeight: Tokens.fontMedium
 
     readonly property int popupHorizontalPadding: Tokens.space4
     readonly property int popupVerticalPadding: Tokens.space2
     readonly property int popupShadowPadding: Tokens.space3
     readonly property int popupAttachOverlap: Tokens.space2
-    readonly property int popupReverseRadius: Style.popupRadius
+    readonly property int popupReverseRadius: 0
     readonly property url popupImageSource: Services.Media.artUrl
     readonly property color popupBackgroundColor: Theme.surface
     readonly property color popupBorderColor: 'transparent'
+
+    readonly property color progressBarColor: baseColor
 
     implicitWidth: hasMedia ? pill.implicitWidth : 0
     implicitHeight: Style.barHeight
@@ -147,6 +149,7 @@ MouseArea {
                     text: Services.Media.title
                     font.family: Style.defaultFontFamily
                     font.pixelSize: root.titleTextSize
+                    font.styleName: ""
                     font.weight: root.titleTextFontWeight
                 }
 
@@ -156,6 +159,7 @@ MouseArea {
                     text: Services.Media.artist
                     font.family: Style.defaultFontFamily
                     font.pixelSize: root.titleTextSize
+                    font.styleName: ""
                     font.weight: root.titleTextFontWeight
                 }
 
@@ -166,6 +170,7 @@ MouseArea {
                     y: (titleClip.height - implicitHeight) / 2 + titleClip.slideProgress * titleClip.height
                     text: titleClip.currentText
                     color: pill.textColor
+                    font.styleName: ""
                     font.family: Style.defaultFontFamily
                     font.pixelSize: root.titleTextSize
                     font.weight: root.titleTextFontWeight
@@ -298,7 +303,7 @@ MouseArea {
                     anchors.bottom: parent.bottom
                     width: parent.width * Services.Media.progress
                     radius: height / 2
-                    color: Theme.aqua
+                    color: root.progressBarColor
 
                     Behavior on width {
                         NumberAnimation {

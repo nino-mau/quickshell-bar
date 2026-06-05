@@ -22,6 +22,7 @@ Item {
         text: Qt.formatDateTime(clock.date, root.format)
         color: Theme.text
         font.pixelSize: Tokens.textBase
+        font.styleName: ""
         font.weight: Tokens.fontMedium
     }
 }

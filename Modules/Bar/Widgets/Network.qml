@@ -104,6 +104,7 @@ MouseArea {
                     color: pill.textColor
                     font.family: Style.defaultFontFamily
                     font.pixelSize: Tokens.textSM
+                    font.styleName: ""
                     font.weight: Tokens.fontMedium
 
                     Behavior on color {
