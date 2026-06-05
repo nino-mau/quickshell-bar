@@ -24,11 +24,42 @@ Singleton {
     readonly property real barColorOpacity: 0.85
     readonly property color barBackground: Commons.Theme.surface
 
+    readonly property int notificationToastRadius: Commons.Tokens.radius3XL
+    readonly property int notificationToastContentPadding: Commons.Tokens.space4
+    readonly property int notificationToastHorizontalGap: Commons.Tokens.space3
+    readonly property int notificationToastVerticalGap: Commons.Tokens.space2
+    readonly property int notificationToastHeaderGap: Commons.Tokens.space2
+    readonly property int notificationToastVisualSize: Commons.Tokens.space12
+    readonly property int notificationToastIconSize: Commons.Tokens.space8
+    readonly property int notificationToastImageSourceSize: Commons.Tokens.space24
+    readonly property int notificationToastVisualRadius: Commons.Tokens.radiusLG
+    readonly property color notificationToastVisualBackground: "transparent"
+    readonly property real notificationToastBackgroundOpacity: 0.6
+    readonly property int notificationToastBorderWidth: Commons.Tokens.border1
+    readonly property color notificationToastBorder: Commons.Theme.border
+    readonly property color notificationToastBackground: Commons.Theme.bg0
+    readonly property color notificationToastColor: Commons.Theme.withAlpha(notificationToastBackground, notificationToastBackgroundOpacity)
+    readonly property int notificationToastCloseButtonSize: Commons.Tokens.space5
+    readonly property int notificationToastCloseTextSize: Commons.Tokens.textLG
+    readonly property color notificationToastCloseColor: Commons.Theme.textMuted
+    readonly property color notificationToastCloseHoverColor: Commons.Theme.red
+    readonly property color notificationToastAppColor: Commons.Theme.textMuted
+    readonly property int notificationToastAppTextSize: Commons.Tokens.textXS
+    readonly property int notificationToastAppFontWeight: Commons.Tokens.fontMedium
+    readonly property color notificationToastSummaryColor: Commons.Theme.text
+    readonly property int notificationToastSummaryTextSize: Commons.Tokens.textSM
+    readonly property int notificationToastSummaryFontWeight: Commons.Tokens.fontBold
+    readonly property color notificationToastBodyColor: Commons.Theme.text
+    readonly property real notificationToastBodyOpacity: 0.78
+    readonly property int notificationToastBodyTextSize: Commons.Tokens.textXS
+    readonly property int notificationToastBodyMaxLines: 3
+
     readonly property int pillHeight: 31
     readonly property int pillIconSize: Commons.Tokens.textLG
     readonly property int pillRadius: Commons.Tokens.radiusFull
     readonly property int pillTextSize: Commons.Tokens.textSM
     readonly property int pillGap: Commons.Tokens.space2
+    readonly property real bluetoothDefaultIconRightMargin: Commons.Tokens.space0_5
     readonly property color pillDefaultBase: Commons.Theme.surfaceRaised
     readonly property color pillDefaultText: Commons.Theme.text
     readonly property color pillDefaultBackground: Commons.Theme.surfaceRaised
