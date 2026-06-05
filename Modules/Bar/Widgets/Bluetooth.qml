@@ -64,6 +64,7 @@ MouseArea {
             Text {
                 text: root.icon
                 color: pill.textColor
+                Layout.rightMargin: root.icon === Icons.bluetoothOn ? Style.bluetoothDefaultIconRightMargin : 0
                 font.family: Style.iconFontFamily
                 font.pixelSize: Style.pillIconSize
 

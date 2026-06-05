@@ -17,13 +17,13 @@ PanelWindow {
 
     // Widget colors
 
-    readonly property color launcherBaseColor: Theme.blue
-    readonly property color mediaBaseColor: Theme.aqua
+    readonly property color launcherBaseColor: Style.pillDefaultBase
+    readonly property color mediaBaseColor: Theme.blue
     readonly property color weatherBaseColor: Theme.red
-    readonly property color systemMonitorBaseColor: Style.pillDefaultBase
-    readonly property color bluetoothBaseColor: Style.pillDefaultBase
-    readonly property color networkBaseColor: Style.pillDefaultBase
-    readonly property color audioBaseColor: Style.pillDefaultBase
+    readonly property color systemMonitorBaseColor: Theme.purple
+    readonly property color bluetoothBaseColor: Theme.red
+    readonly property color networkBaseColor: Theme.purple
+    readonly property color audioBaseColor: Theme.blue
 
     WlrLayershell.namespace: "quickshell-bar-" + (screen ? screen.name : "unknown")
     WlrLayershell.layer: WlrLayer.Top

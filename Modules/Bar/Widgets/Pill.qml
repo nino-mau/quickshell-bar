@@ -25,7 +25,7 @@ Rectangle {
         if (root.baseColor === Style.pillDefaultBase) {
             return Style.pillDefaultHoverBackground;
         } else {
-            return Theme.withAlpha(root.baseColor, 0.7);
+            return Theme.withAlpha(root.baseColor, 0.2);
         }
     }
 
