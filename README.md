@@ -7,6 +7,8 @@ Simple bar built with [QML](https://doc.qt.io/qt-6/qtqml-documents-topic.html)/[
 ## Features
 
 - Hyprland workspaces
+- Configurable themes
+- Notifications
 - System tray
 - Clock
 - Network status
