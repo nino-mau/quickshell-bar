@@ -69,7 +69,7 @@ AbstractButton {
             }
 
             // Weather icon
-            Icon {
+            LucideIcon {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: content.iconSize
                 Layout.preferredHeight: content.iconSize

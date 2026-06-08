@@ -81,7 +81,7 @@ AbstractButton {
                 barColor: capsule.textColor
             }
 
-            Icon {
+            LucideIcon {
                 anchors.centerIn: parent
                 name: "pause"
                 opacity: Services.Media.isPlaying ? 0 : 1

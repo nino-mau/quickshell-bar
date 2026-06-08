@@ -11,7 +11,7 @@ Singleton {
     readonly property int defaultCapsuleSpacing: 3
 
     readonly property int capsuleVerticalPadding: 7
-    readonly property real capsuleIconSizeRatio: 0.55
+    readonly property real capsuleIconSizeRatio: 0.50
     readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
     readonly property real capsuleTextSizeRatio: 0.35
     readonly property real capsuleTextPaddingRatio: (1 - capsuleTextSizeRatio) / 2

@@ -14,10 +14,10 @@ AbstractButton {
     property color baseColor
 
     readonly property int linearGaugeHeight: 3
-    readonly property real capsuleIconSizeRatio: 0.60
-    readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
-    readonly property real capsuleTextSizeRatio: 0.35
-    readonly property real capsuleTextPaddingRatio: (1 - capsuleTextSizeRatio) / 2
+    // readonly property real capsuleIconSizeRatio: 0.60
+    // readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
+    // readonly property real capsuleTextSizeRatio: 0.35
+    // readonly property real capsuleTextPaddingRatio: (1 - capsuleTextSizeRatio) / 2
 
     readonly property real warningUsageThreshold: 0.7
     readonly property real criticalUsageThreshold: 0.9
@@ -78,9 +78,9 @@ AbstractButton {
         id: content
 
         readonly property int capsuleBaseSize: width > 0 ? width : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * root.capsuleIconPaddingRatio)
+        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
         readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
-        readonly property int textPadding: Math.round(capsuleBaseSize * root.capsuleTextPaddingRatio)
+        readonly property int textPadding: Math.round(capsuleBaseSize * Style.capsuleTextPaddingRatio)
         readonly property int textSize: Math.max(1, capsuleBaseSize - textPadding * 2)
 
         implicitWidth: layout.implicitWidth
@@ -88,20 +88,20 @@ AbstractButton {
 
         ColumnLayout {
             id: layout
-            anchors.verticalCenterOffset: -2
+            anchors.verticalCenterOffset: -1
             anchors.centerIn: parent
             spacing: 8
 
             // Memory usage
             ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter
-                spacing: 1
+                spacing: 3
 
-                Icon {
+                LucideIcon {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: content.iconSize
                     Layout.preferredHeight: content.iconSize
-                    name: "memory"
+                    name: "cpu"
                     color: root.usageColor(Services.SystemUsage.memPerc)
                     size: content.iconSize
                 }
@@ -119,13 +119,13 @@ AbstractButton {
             // CPU Usage
             ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter
-                spacing: 1
+                spacing: 3
 
-                Icon {
+                LucideIcon {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: content.iconSize
                     Layout.preferredHeight: content.iconSize
-                    name: "speed"
+                    name: "gauge"
                     color: root.usageColor(Services.SystemUsage.cpuPerc)
                     size: content.iconSize
                 }
@@ -143,13 +143,13 @@ AbstractButton {
             // CPU Temperature
             ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter
-                spacing: 1
+                spacing: 3
 
-                Icon {
+                LucideIcon {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: content.iconSize
                     Layout.preferredHeight: content.iconSize
-                    name: "heat"
+                    name: "flame"
                     color: root.tempColor(Services.SystemUsage.cpuTemp)
                     size: content.iconSize
                 }

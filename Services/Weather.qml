@@ -16,7 +16,7 @@ Singleton {
 
     readonly property bool loading: locationProcess.running || weatherProcess.running
     readonly property bool hasWeather: weatherCode >= 0
-    readonly property string icon: hasWeather ? weatherIcon(weatherCode, isDay) : Commons.Icons.get("weatherAlert")
+    readonly property string icon: hasWeather ? weatherIcon(weatherCode, isDay) : "cloud"
     readonly property string temperatureText: hasWeather ? temperatureC + "°C" : "--"
     readonly property string temperatureTextSimple: hasWeather ? temperatureC + "°" : "--"
 
@@ -84,30 +84,30 @@ Singleton {
 
     function weatherIcon(code: int, day: bool): string {
         if (code === 0 || code === 1) {
-            return Commons.Icons.get(day ? "weatherSunny" : "weatherNight");
+            return day ? "sun" : "moon-star";
         }
         if (code === 2) {
-            return Commons.Icons.get("weatherPartlyCloudy");
+            return day ? "cloud-sun" : "cloud-moon";
         }
         if (code === 3) {
-            return Commons.Icons.get("weatherCloudy");
+            return "cloudy";
         }
         if (code === 45 || code === 48) {
-            return Commons.Icons.get("weatherFog");
+            return "cloud-fog";
         }
         if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
-            return Commons.Icons.get(code >= 65 || code === 82 ? "weatherPouring" : "weatherRainy");
+            return code >= 65 || code === 82 ? "cloud-rain" : "cloud-drizzle";
         }
         if ((code >= 71 && code <= 77) || code === 85 || code === 86) {
-            return Commons.Icons.get("weatherSnowy");
+            return "cloud-snow";
         }
         if (code === 95) {
-            return Commons.Icons.get("weatherLightning");
+            return "cloud-lightning";
         }
         if (code === 96 || code === 99) {
-            return Commons.Icons.get("weatherHail");
+            return "cloud-hail";
         }
-        return Commons.Icons.get("weatherAlert");
+        return "cloud";
     }
 
     function isCoords(value: string): bool {
