@@ -27,6 +27,7 @@ Item {
 
         x: Math.round((root.width - implicitWidth) / 2)
         y: Math.round((root.height - contentHeight) / 2 + root.verticalOffset)
+        opacity: root.opacity
         text: root.symbol
         color: root.color
         font.family: root.fontFamily
