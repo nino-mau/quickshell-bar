@@ -87,8 +87,11 @@ PanelWindow {
                     left: parent.left
                     right: parent.right
                 }
-                spacing: root.barGap
+                spacing: 20
 
+                Widgets.Workspaces {
+                    screen: root.screen
+                }
                 Widgets.Clock {
                     square: true
                     baseColor: Theme.bg2
