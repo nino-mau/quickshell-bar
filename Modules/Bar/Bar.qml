@@ -18,7 +18,7 @@ PanelWindow {
     readonly property int barMargin: 16
     readonly property int barPadding: 8
     readonly property int barGap: 10
-    readonly property real barBackgroundOpacity: 0.55
+    readonly property real barBackgroundOpacity: 0.8
     readonly property color barBackgroundColor: Theme.withAlpha(Theme.bg1, barBackgroundOpacity)
 
     WlrLayershell.namespace: "quickshell-bar-vert-" + (screen ? screen.name : "unknown")
@@ -71,6 +71,10 @@ PanelWindow {
                     baseColor: Theme.bg2
                 }
                 Widgets.SystemMonitor {
+                    baseColor: Theme.bg2
+                }
+                Widgets.MediaPlayer {
+                    square: true
                     baseColor: Theme.bg2
                 }
             }
