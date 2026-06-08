@@ -89,22 +89,9 @@ PanelWindow {
                 }
                 spacing: root.barGap
 
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 10
-                    color: "red"
-                    border.color: "black"
-                    border.width: 5
-                    radius: 10
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 10
-                    color: "red"
-                    border.color: "black"
-                    border.width: 5
-                    radius: 10
+                Widgets.Clock {
+                    square: true
+                    baseColor: Theme.bg2
                 }
             }
 
