@@ -108,6 +108,9 @@ PanelWindow {
                 }
                 spacing: root.barGap
 
+                Widgets.Tray {
+                    baseColor: Theme.bg2
+                }
                 Widgets.Bluetooth {
                     baseColor: Theme.bg2
                 }
