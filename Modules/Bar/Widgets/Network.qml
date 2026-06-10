@@ -89,12 +89,12 @@ AbstractButton {
     contentItem: Item {
         id: content
 
-        // readonly property real capsuleIconSizeRatio: 0.55
-        // readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
+        readonly property real capsuleIconSizeRatio: 0.55
+        readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
         readonly property int capsuleBaseSize: width > 0 ? width : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
+        readonly property int iconPadding: Math.round(capsuleBaseSize * capsuleIconPaddingRatio)
         readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
-        readonly property int textPadding: Math.round(capsuleBaseSize * Style.capsuleTextPaddingRatio)
+        readonly property int textPadding: Math.round(capsuleBaseSize * capsuleTextPaddingRatio)
         readonly property int textSize: Math.max(1, capsuleBaseSize - textPadding * 2)
 
         implicitWidth: layout.implicitWidth

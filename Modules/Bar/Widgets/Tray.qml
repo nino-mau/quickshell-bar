@@ -59,8 +59,10 @@ Control {
     contentItem: Item {
         id: content
 
+        readonly property real capsuleIconSizeRatio: 0.40
+        readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
         readonly property int capsuleBaseSize: width > 0 ? width : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
+        readonly property int iconPadding: Math.round(capsuleBaseSize * capsuleIconPaddingRatio)
         readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
 
         implicitWidth: layout.implicitWidth
