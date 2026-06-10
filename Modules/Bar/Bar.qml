@@ -114,6 +114,9 @@ PanelWindow {
                 Widgets.Bluetooth {
                     baseColor: Theme.bg2
                 }
+                Widgets.Network {
+                    baseColor: Theme.bg2
+                }
                 Widgets.Volume {
                     baseColor: Theme.bg2
                 }
