@@ -32,18 +32,7 @@ AbstractButton {
     onClicked: launch(Qt.LeftButton)
 
     function launch(button: int): void {
-        const entry = DesktopEntries.heuristicLookup("wiremix");
-        if (entry) {
-            Quickshell.execDetached(["ghostty", "-e", "wiremix"]);
-            return;
-        }
-
-        if (button === Qt.LeftButton) {
-            Services.Audio.toggleMuted();
-            return;
-        }
-
-        Services.Audio.cycleNextSink();
+        Quickshell.execDetached(["vicinae", "vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi"]);
     }
 
     function showSignalStrengthText(): bool {
