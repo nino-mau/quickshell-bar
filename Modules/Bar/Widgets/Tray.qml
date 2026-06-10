@@ -1,24 +1,23 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 import qs.Commons
 
-Control {
+Item {
     id: root
 
     property color baseColor
     readonly property int traySpacing: 8
+    readonly property int iconSize: Math.max(1, Math.round((width > 0 ? width : 30) * 0.60))
 
     Layout.fillWidth: true
-    Layout.preferredHeight: trayItems.count > 0 ? Math.max(capsule.implicitHeight, implicitHeight) : 0
-    topPadding: Style.capsuleVerticalPadding
-    bottomPadding: Style.capsuleVerticalPadding
-    hoverEnabled: true
+    Layout.preferredHeight: trayItems.count > 0 ? layout.implicitHeight : 0
+    implicitWidth: layout.implicitWidth
+    implicitHeight: layout.implicitHeight
     visible: trayItems.count > 0
     Accessible.name: qsTr("System tray")
 
@@ -49,64 +48,42 @@ Control {
         return SystemTray.items.values.filter(trayItem => trayItem.title !== "blueman");
     }
 
-    background: Capsule {
-        id: capsule
+    ColumnLayout {
+        id: layout
 
-        baseColor: root.baseColor
-        hovered: root.hovered
-    }
+        anchors.centerIn: parent
+        spacing: root.traySpacing
 
-    contentItem: Item {
-        id: content
+        Repeater {
+            id: trayItems
 
-        readonly property real capsuleIconSizeRatio: 0.40
-        readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
-        readonly property int capsuleBaseSize: width > 0 ? width : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * capsuleIconPaddingRatio)
-        readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
+            model: root.getTrayItems()
 
-        implicitWidth: layout.implicitWidth
-        implicitHeight: layout.implicitHeight
+            delegate: MouseArea {
+                id: trayButton
 
-        ColumnLayout {
-            id: layout
+                required property SystemTrayItem modelData
 
-            anchors.centerIn: parent
-            spacing: root.traySpacing
+                Layout.alignment: Qt.AlignHCenter
+                Layout.preferredWidth: root.iconSize
+                Layout.preferredHeight: root.iconSize
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                Accessible.name: trayButton.modelData.title || trayButton.modelData.id || qsTr("Tray item")
 
-            Repeater {
-                id: trayItems
+                onClicked: event => root.activateItem(trayButton.modelData, trayButton, event.button)
 
-                model: root.getTrayItems()
+                IconImage {
+                    anchors.fill: parent
+                    source: trayButton.modelData.icon
+                    asynchronous: true
+                    opacity: trayButton.containsMouse ? 1 : 0.85
 
-                delegate: MouseArea {
-                    id: trayButton
-
-                    required property SystemTrayItem modelData
-
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: content.iconSize
-                    Layout.preferredHeight: content.iconSize
-                    acceptedButtons: Qt.LeftButton | Qt.RightButton
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    Accessible.name: trayButton.modelData.title || trayButton.modelData.id || qsTr("Tray item")
-
-                    onClicked: event => root.activateItem(trayButton.modelData, trayButton, event.button)
-
-                    IconImage {
-                        anchors.centerIn: parent
-                        width: content.iconSize
-                        height: content.iconSize
-                        source: trayButton.modelData.icon
-                        asynchronous: true
-                        opacity: trayButton.containsMouse ? 1 : 0.85
-
-                        Behavior on opacity {
-                            NumberAnimation {
-                                duration: 140
-                                easing.type: Easing.InOutQuad
-                            }
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 140
+                            easing.type: Easing.InOutQuad
                         }
                     }
                 }
