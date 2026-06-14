@@ -1,6 +1,6 @@
 # Quickshell Hyprland Bar
 
-![](./Assets/screenshot-banner.png)
+![](./Assets/illustration.png)
 
 Simple bar built with [QML](https://doc.qt.io/qt-6/qtqml-documents-topic.html)/[Quickshell](https://quickshell.org/) for [Hyprland](https://hypr.land/).
 
@@ -42,5 +42,3 @@ qs -c bar
 ```
 
 ## Demo
-
-![](./Assets/demo.gif)
