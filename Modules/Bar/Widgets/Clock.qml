@@ -10,10 +10,13 @@ Item {
 
     property color baseColor
     property bool square: false
+    property bool vertical: true
     property color textColor: Theme.fg
 
-    Layout.fillWidth: true
+    Layout.fillWidth: root.vertical
+    Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
     Layout.preferredHeight: root.square ? (root.width > 0 ? root.width : layout.implicitHeight) : layout.implicitHeight
+    Layout.preferredWidth: layout.implicitWidth
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
     Accessible.name: qsTr("Clock")
@@ -23,17 +26,23 @@ Item {
         precision: SystemClock.Seconds
     }
 
-    ColumnLayout {
+    GridLayout {
         id: layout
 
+        // In horizontal mode, mirror the row so the date comes before the time.
+        LayoutMirroring.enabled: !root.vertical
+        LayoutMirroring.childrenInherit: false
+
         anchors.centerIn: parent
-        spacing: root.square ? -2 : 1
+        columns: root.vertical ? 1 : 2
+        rowSpacing: root.square ? -2 : 1
+        columnSpacing: 7
 
         Text {
-            Layout.alignment: Qt.AlignHCenter
+            Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
             text: root.square ? Qt.formatDateTime(clock.date, "HH") : Qt.formatDateTime(clock.date, "HH:mm")
             color: root.textColor
-            font.pixelSize: root.square ? Math.max(14, Math.round(root.width * 0.55)) : Style.textXS
+            font.pixelSize: root.square ? Math.max(14, Math.round(root.width * 0.55)) : Style.textBase
             font.weight: Style.fontBold
             font.letterSpacing: root.square ? -0.8 : 0
         }
@@ -70,10 +79,10 @@ Item {
         }
 
         Text {
-            Layout.alignment: Qt.AlignHCenter
-            text: root.square ? Qt.formatDateTime(clock.date, "mm") : Qt.formatDateTime(clock.date, "ddd dd")
+            Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
+            text: root.square ? Qt.formatDateTime(clock.date, "mm") : Qt.formatDateTime(clock.date, "dd MMM")
             color: Theme.withAlpha(root.textColor, root.square ? 0.78 : 0.7)
-            font.pixelSize: root.square ? Math.max(13, Math.round(root.width * 0.50)) : Style.textXXS
+            font.pixelSize: root.square ? Math.max(13, Math.round(root.width * 0.50)) : Style.textSM
             font.weight: Style.fontMedium
             font.letterSpacing: root.square ? -0.8 : 0
         }

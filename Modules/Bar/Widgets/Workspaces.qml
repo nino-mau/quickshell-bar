@@ -11,6 +11,7 @@ Item {
 
     required property ShellScreen screen
 
+    property bool vertical: true
     property int workspaceCount: 5
 
     property var workspaceIcons: ["terminal.svg", "firefox.svg", "terminal.svg", "shapes.svg", "layout.svg"]
@@ -43,9 +44,10 @@ Item {
     }
 
     Layout.fillWidth: false
-    Layout.preferredWidth: workspaceWidth
-    Layout.preferredHeight: implicitHeight
-    Layout.alignment: Qt.AlignHCenter
+    Layout.fillHeight: !vertical
+    Layout.preferredWidth: vertical ? workspaceWidth : implicitWidth
+    Layout.preferredHeight: vertical ? implicitHeight : workspaceWidth
+    Layout.alignment: vertical ? Qt.AlignHCenter : Qt.AlignVCenter
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
 
@@ -85,15 +87,16 @@ Item {
         return Qt.resolvedUrl(Quickshell.shellDir + "/Assets/Icons/" + iconFile);
     }
 
-    ColumnLayout {
+    GridLayout {
         id: layout
 
         anchors {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
         }
-        width: root.workspaceWidth
-        spacing: root.workspaceGap
+        columns: root.vertical ? 1 : 99
+        rowSpacing: root.workspaceGap
+        columnSpacing: root.workspaceGap
 
         Repeater {
             model: root.workspaceCount
@@ -110,8 +113,10 @@ Item {
                 readonly property color buttonColor: active ? root.activeColor : occupied && !onOtherMonitor ? root.occupiedColor : root.inactiveColor
                 property real pulse: 0
 
-                Layout.fillWidth: true
-                Layout.preferredHeight: active ? root.workspaceActiveHeight : root.workspaceInactiveHeight
+                readonly property int workspaceLength: active ? root.workspaceActiveHeight : root.workspaceInactiveHeight
+
+                Layout.preferredWidth: root.vertical ? root.workspaceWidth : workspaceLength
+                Layout.preferredHeight: root.vertical ? workspaceLength : root.workspaceWidth
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 Accessible.role: Accessible.Button
@@ -121,6 +126,13 @@ Item {
                 onActiveChanged: {
                     if (active) {
                         activationPulse.restart();
+                    }
+                }
+
+                Behavior on Layout.preferredWidth {
+                    NumberAnimation {
+                        duration: root.sizeAnimationDuration
+                        easing.type: Easing.OutCubic
                     }
                 }
 

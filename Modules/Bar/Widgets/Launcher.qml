@@ -11,9 +11,12 @@ AbstractButton {
 
     property color baseColor
     property bool square: false
+    property bool vertical: true
 
-    Layout.fillWidth: true
+    Layout.fillWidth: root.vertical
+    Layout.fillHeight: !root.vertical
     Layout.preferredHeight: root.square ? (root.width > 0 ? root.width : capsule.implicitHeight) : capsule.implicitHeight
+    Layout.preferredWidth: root.square ? (root.height > 0 ? root.height : capsule.implicitHeight) : capsule.implicitHeight
     hoverEnabled: true
     Accessible.name: qsTr("Open launcher")
 

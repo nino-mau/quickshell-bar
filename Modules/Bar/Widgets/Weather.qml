@@ -11,11 +11,16 @@ AbstractButton {
     id: root
 
     property color baseColor
+    property bool vertical: true
 
-    Layout.fillWidth: true
+    Layout.fillWidth: root.vertical
+    Layout.fillHeight: !root.vertical
     Layout.preferredHeight: Math.max(capsule.implicitHeight, implicitHeight)
-    topPadding: Style.capsuleVerticalPadding
-    bottomPadding: Style.capsuleVerticalPadding
+    Layout.preferredWidth: Math.max(capsule.implicitHeight, implicitWidth)
+    topPadding: root.vertical ? Style.capsuleVerticalPadding : 0
+    bottomPadding: root.vertical ? Style.capsuleVerticalPadding : 0
+    leftPadding: root.vertical ? 0 : Style.capsuleVerticalPadding
+    rightPadding: root.vertical ? 0 : Style.capsuleVerticalPadding
     hoverEnabled: true
     Accessible.name: qsTr("Open launcher")
 
@@ -44,7 +49,8 @@ AbstractButton {
     contentItem: Item {
         id: content
 
-        readonly property int capsuleBaseSize: width > 0 ? width : capsule.implicitHeight
+        readonly property int crossSize: root.vertical ? width : height
+        readonly property int capsuleBaseSize: crossSize > 0 ? crossSize : capsule.implicitHeight
         readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
         readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
         readonly property int textPadding: Math.round(capsuleBaseSize * Style.capsuleTextPaddingRatio)
@@ -53,13 +59,15 @@ AbstractButton {
         implicitWidth: layout.implicitWidth
         implicitHeight: layout.implicitHeight
 
-        ColumnLayout {
+        GridLayout {
             id: layout
 
-            property real textSpacing: Services.Weather.hasWeather ? Style.defaultCapsuleSpacing : 0
+            property real textSpacing: Services.Weather.hasWeather ? (root.vertical ? Style.defaultCapsuleSpacing : 6) : 0
 
             anchors.centerIn: parent
-            spacing: textSpacing
+            columns: root.vertical ? 1 : 2
+            rowSpacing: textSpacing
+            columnSpacing: textSpacing
 
             Behavior on textSpacing {
                 NumberAnimation {
@@ -70,7 +78,7 @@ AbstractButton {
 
             // Weather icon
             LucideIcon {
-                Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: content.iconSize
                 Layout.preferredHeight: content.iconSize
                 name: Services.Weather.icon
@@ -82,7 +90,7 @@ AbstractButton {
             Item {
                 id: temperatureWrapper
 
-                Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignCenter
                 readonly property bool shown: Services.Weather.hasWeather
                 property real textWidth: shown ? temperatureText.implicitWidth : 0
                 Layout.preferredWidth: textWidth
@@ -94,9 +102,9 @@ AbstractButton {
                     id: temperatureText
 
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Services.Weather.temperatureC
+                    text: root.vertical ? Services.Weather.temperatureC : Services.Weather.temperatureText
                     color: capsule.textColor
-                    font.pixelSize: content.textSize
+                    font.pixelSize: root.vertical ? content.textSize : capsule.horizontalTextSize
                     font.weight: Style.fontMedium
                 }
 

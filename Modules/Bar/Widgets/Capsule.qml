@@ -11,6 +11,7 @@ Rectangle {
     property bool square: false
     readonly property int capsuleHeight: 30
     readonly property int capsuleRadius: Style.defaultRadius
+    readonly property int horizontalTextSize: Style.textXSHalf
     property int colorAnimationDuration: 140
     property color defaultBaseColor: Theme.bg2
     property color defaultBackgroundColor: Theme.bg2

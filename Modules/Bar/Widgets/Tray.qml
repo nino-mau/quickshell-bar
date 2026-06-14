@@ -11,11 +11,16 @@ Item {
     id: root
 
     property color baseColor
+    property bool vertical: true
     readonly property int traySpacing: 8
-    readonly property int iconSize: Math.max(1, Math.round((width > 0 ? width : 30) * 0.60))
+    readonly property int crossSize: vertical ? width : height
+    readonly property int iconSize: Math.max(1, Math.round((crossSize > 0 ? crossSize : 30) * 0.60))
+    readonly property int horizontalIconSize: Math.max(1, Math.round((crossSize > 0 ? crossSize : 30) * 0.7))
 
-    Layout.fillWidth: true
+    Layout.fillWidth: root.vertical
+    Layout.fillHeight: !root.vertical
     Layout.preferredHeight: trayItems.count > 0 ? layout.implicitHeight : 0
+    Layout.preferredWidth: trayItems.count > 0 ? layout.implicitWidth : 0
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
     visible: trayItems.count > 0
@@ -48,11 +53,13 @@ Item {
         return SystemTray.items.values.filter(trayItem => trayItem.title !== "blueman");
     }
 
-    ColumnLayout {
+    GridLayout {
         id: layout
 
         anchors.centerIn: parent
-        spacing: root.traySpacing
+        columns: root.vertical ? 1 : 99
+        rowSpacing: root.traySpacing
+        columnSpacing: root.traySpacing
 
         Repeater {
             id: trayItems
@@ -64,9 +71,9 @@ Item {
 
                 required property SystemTrayItem modelData
 
-                Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: root.iconSize
-                Layout.preferredHeight: root.iconSize
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredWidth: root.vertical ? root.iconSize : root.horizontalIconSize
+                Layout.preferredHeight: root.vertical ? root.iconSize : root.horizontalIconSize
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor

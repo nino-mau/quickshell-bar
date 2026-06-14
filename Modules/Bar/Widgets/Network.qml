@@ -11,14 +11,20 @@ AbstractButton {
     id: root
 
     property color baseColor
+    property bool vertical: true
     readonly property bool showingSignalStrengthText: showSignalStrengthText()
     readonly property string networkIcon: getNetworkIcon()
+    readonly property string infoText: (!root.vertical && Services.Network.connected && Services.Network.networkName.length > 0) ? Services.Network.networkName : Math.round(Services.Network.signalStrength * 100) + '%'
     property real expansionProgress: showingSignalStrengthText ? 1 : 0
 
-    Layout.fillWidth: true
+    Layout.fillWidth: root.vertical
+    Layout.fillHeight: !root.vertical
     Layout.preferredHeight: Math.max(width > 0 ? width : capsule.implicitHeight, implicitHeight)
-    topPadding: Style.capsuleVerticalPadding * expansionProgress
-    bottomPadding: Style.capsuleVerticalPadding * expansionProgress
+    Layout.preferredWidth: Math.max(height > 0 ? height : capsule.implicitHeight, implicitWidth)
+    topPadding: root.vertical ? Style.capsuleVerticalPadding * expansionProgress : 0
+    bottomPadding: root.vertical ? Style.capsuleVerticalPadding * expansionProgress : 0
+    leftPadding: root.vertical ? 0 : Style.capsuleVerticalPadding * expansionProgress
+    rightPadding: root.vertical ? 0 : Style.capsuleVerticalPadding * expansionProgress
     hoverEnabled: true
     Accessible.name: qsTr("Volume")
 
@@ -50,10 +56,10 @@ AbstractButton {
             return Icons.get("wifi-low");
         }
         if (Services.Network.signalStrength < 0.5) {
-            return Icons.get("wifi-low");
+            return Icons.get("wifi-high");
         }
         if (Services.Network.signalStrength < 0.75) {
-            return Icons.get("wifi-high");
+            return Icons.get("wifi");
         }
         return Icons.get("wifi");
     }
@@ -78,28 +84,31 @@ AbstractButton {
     contentItem: Item {
         id: content
 
-        readonly property real capsuleIconSizeRatio: 0.55
-        readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
-        readonly property int capsuleBaseSize: width > 0 ? width : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * capsuleIconPaddingRatio)
+        // readonly property real capsuleIconSizeRatio: 0.55
+        // readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
+        readonly property int crossSize: root.vertical ? width : height
+        readonly property int capsuleBaseSize: crossSize > 0 ? crossSize : capsule.implicitHeight
+        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
         readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
-        readonly property int textPadding: Math.round(capsuleBaseSize * capsuleTextPaddingRatio)
+        readonly property int textPadding: Math.round(capsuleBaseSize * Style.capsuleTextPaddingRatio)
         readonly property int textSize: Math.max(1, capsuleBaseSize - textPadding * 2)
 
         implicitWidth: layout.implicitWidth
         implicitHeight: layout.implicitHeight
 
-        ColumnLayout {
+        GridLayout {
             id: layout
 
             property real textSpacing: Style.defaultCapsuleSpacing * root.expansionProgress
 
             anchors.centerIn: parent
-            spacing: textSpacing
+            columns: root.vertical ? 1 : 2
+            rowSpacing: textSpacing
+            columnSpacing: textSpacing
 
             // Network icon
             LucideIcon {
-                Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: content.iconSize
                 Layout.preferredHeight: content.iconSize
                 name: root.networkIcon
@@ -113,7 +122,7 @@ AbstractButton {
                 property real textWidth: signalStrengthText.implicitWidth * root.expansionProgress
                 property real textHeight: signalStrengthText.implicitHeight * root.expansionProgress
 
-                Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: textWidth
                 Layout.preferredHeight: textHeight
 
@@ -124,9 +133,9 @@ AbstractButton {
                     id: signalStrengthText
 
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Math.round(Services.Network.signalStrength * 100) + '%'
+                    text: root.infoText
                     color: capsule.textColor
-                    font.pixelSize: Style.textXS
+                    font.pixelSize: root.vertical ? Style.textXS : capsule.horizontalTextSize
                     font.weight: Style.fontMedium
 
                     Behavior on color {

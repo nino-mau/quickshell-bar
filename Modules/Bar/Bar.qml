@@ -1,19 +1,22 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import qs.Commons
-import qs.Modules.Bar.Widgets as Widgets
+import qs.Modules.Bar
 
 PanelWindow {
     id: root
 
     color: "transparent"
 
+    // Orientation
+
+    readonly property bool vertical: Config.vertical
+
     // Style
 
-    readonly property int barWidth: 50
+    readonly property int barThickness: vertical ? 50 : 44
     readonly property int barRadius: Style.defaultRadius
     readonly property int barMargin: 16
     readonly property int barPadding: 8
@@ -21,26 +24,28 @@ PanelWindow {
     readonly property real barBackgroundOpacity: 0.8
     readonly property color barBackgroundColor: Theme.withAlpha(Theme.bg1, barBackgroundOpacity)
 
-    WlrLayershell.namespace: "quickshell-bar-vert-" + (screen ? screen.name : "unknown")
+    WlrLayershell.namespace: "quickshell-bar-" + (vertical ? "vert-" : "horiz-") + (screen ? screen.name : "unknown")
     WlrLayershell.layer: WlrLayer.Top
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
     WlrLayershell.exclusionMode: ExclusionMode.Auto
 
+    // Anchor to every edge except the interior one (opposite the bar's screen edge).
     anchors {
-        top: true
-        bottom: true
-        left: true
-        right: false
+        top: Config.position !== "bottom"
+        bottom: Config.position !== "top"
+        left: Config.position !== "right"
+        right: Config.position !== "left"
     }
 
     margins {
-        top: barMargin
-        right: 0
-        left: barMargin
-        bottom: barMargin
+        top: Config.position === "bottom" ? 0 : barMargin
+        bottom: Config.position === "top" ? 0 : barMargin
+        left: Config.position === "right" ? 0 : barMargin
+        right: Config.position === "left" ? 0 : barMargin
     }
 
-    implicitWidth: barWidth
+    implicitWidth: barThickness
+    implicitHeight: barThickness
 
     Control {
         anchors.fill: parent
@@ -52,75 +57,24 @@ PanelWindow {
             color: root.barBackgroundColor
         }
 
-        contentItem: Item {
-            // Top section widgets
-            ColumnLayout {
-                id: topSection
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-                spacing: root.barGap
+        contentItem: Loader {
+            sourceComponent: root.vertical ? verticalLayout : horizontalLayout
+        }
+    }
 
-                Widgets.Launcher {
-                    baseColor: Theme.bg2
-                    square: true
-                }
-                Widgets.Weather {
-                    baseColor: Theme.bg2
-                }
-                Widgets.SystemMonitor {
-                    baseColor: Theme.bg2
-                }
-                Widgets.MediaPlayer {
-                    square: true
-                    baseColor: Theme.bg2
-                }
-            }
+    Component {
+        id: verticalLayout
+        BarLayoutVertical {
+            screen: root.screen
+            gap: root.barGap
+        }
+    }
 
-            // Middle section widgets
-            ColumnLayout {
-                id: middleSection
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    left: parent.left
-                    right: parent.right
-                }
-                spacing: 20
-
-                Widgets.Workspaces {
-                    screen: root.screen
-                }
-                Widgets.Clock {
-                    square: true
-                    baseColor: Theme.bg2
-                }
-            }
-
-            // Bottom section widgets
-            ColumnLayout {
-                id: bottomSection
-                anchors {
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: parent.right
-                }
-                spacing: root.barGap
-
-                Widgets.Tray {
-                    baseColor: Theme.bg2
-                }
-                Widgets.Bluetooth {
-                    baseColor: Theme.bg2
-                }
-                Widgets.Network {
-                    baseColor: Theme.bg2
-                }
-                Widgets.Volume {
-                    baseColor: Theme.bg2
-                }
-            }
+    Component {
+        id: horizontalLayout
+        BarLayoutHorizontal {
+            screen: root.screen
+            gap: root.barGap
         }
     }
 }

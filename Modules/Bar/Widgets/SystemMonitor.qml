@@ -12,6 +12,7 @@ AbstractButton {
     id: root
 
     property color baseColor
+    property bool vertical: true
 
     readonly property int linearGaugeHeight: 3
     // readonly property real capsuleIconSizeRatio: 0.60
@@ -26,10 +27,20 @@ AbstractButton {
 
     readonly property string usageRegistrationId: "system-monitor-" + Math.random().toString(36).slice(2)
 
-    Layout.fillWidth: true
+    Layout.fillWidth: root.vertical
+    Layout.fillHeight: !root.vertical
     Layout.preferredHeight: Math.max(capsule.implicitHeight, implicitHeight)
-    topPadding: Style.capsuleVerticalPadding
-    bottomPadding: Style.capsuleVerticalPadding
+    Layout.preferredWidth: Math.max(capsule.implicitHeight, implicitWidth)
+    // The leading icon glyph is drawn with built-in font side-bearing, so its
+    // visible pixels sit slightly inset from its box. The trailing gauge bar is
+    // flush, so equal paddings read as unbalanced. Compensate the right side so
+    // the *visible* left/right gaps match.
+    readonly property int iconOpticalInset: 3
+
+    topPadding: root.vertical ? Style.capsuleVerticalPadding : 0
+    bottomPadding: root.vertical ? Style.capsuleVerticalPadding : 0
+    leftPadding: root.vertical ? 0 : Style.capsuleVerticalPadding
+    rightPadding: root.vertical ? 0 : Style.capsuleVerticalPadding + iconOpticalInset
     hoverEnabled: true
     Accessible.name: qsTr("System monitor")
 
@@ -77,7 +88,8 @@ AbstractButton {
     contentItem: Item {
         id: content
 
-        readonly property int capsuleBaseSize: width > 0 ? width : capsule.implicitHeight
+        readonly property int crossSize: root.vertical ? width : height
+        readonly property int capsuleBaseSize: crossSize > 0 ? crossSize : capsule.implicitHeight
         readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
         readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
         readonly property int textPadding: Math.round(capsuleBaseSize * Style.capsuleTextPaddingRatio)
@@ -86,19 +98,23 @@ AbstractButton {
         implicitWidth: layout.implicitWidth
         implicitHeight: layout.implicitHeight
 
-        ColumnLayout {
+        GridLayout {
             id: layout
-            anchors.verticalCenterOffset: -1
+            anchors.verticalCenterOffset: root.vertical ? -1 : 0
             anchors.centerIn: parent
-            spacing: 8
+            columns: root.vertical ? 1 : 3
+            rowSpacing: 8
+            columnSpacing: 10
 
             // Memory usage
-            ColumnLayout {
-                Layout.alignment: Qt.AlignHCenter
-                spacing: 3
+            GridLayout {
+                Layout.alignment: Qt.AlignCenter
+                columns: root.vertical ? 1 : 2
+                rowSpacing: 3
+                columnSpacing: 4
 
                 LucideIcon {
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
                     Layout.preferredWidth: content.iconSize
                     Layout.preferredHeight: content.iconSize
                     name: "cpu"
@@ -107,22 +123,24 @@ AbstractButton {
                 }
 
                 LinearGauge {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: content.iconSize
-                    Layout.preferredHeight: root.linearGaugeHeight
-                    orientation: Qt.Horizontal
+                    Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
+                    Layout.preferredWidth: root.vertical ? content.iconSize : root.linearGaugeHeight
+                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : content.iconSize
+                    orientation: root.vertical ? Qt.Horizontal : Qt.Vertical
                     ratio: Math.max(0.2, Services.SystemUsage.memPerc)
                     fillColor: root.usageColor(Services.SystemUsage.memPerc)
                 }
             }
 
             // CPU Usage
-            ColumnLayout {
-                Layout.alignment: Qt.AlignHCenter
-                spacing: 3
+            GridLayout {
+                Layout.alignment: Qt.AlignCenter
+                columns: root.vertical ? 1 : 2
+                rowSpacing: 3
+                columnSpacing: 4
 
                 LucideIcon {
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
                     Layout.preferredWidth: content.iconSize
                     Layout.preferredHeight: content.iconSize
                     name: "gauge"
@@ -131,22 +149,24 @@ AbstractButton {
                 }
 
                 LinearGauge {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: content.iconSize
-                    Layout.preferredHeight: root.linearGaugeHeight
-                    orientation: Qt.Horizontal
+                    Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
+                    Layout.preferredWidth: root.vertical ? content.iconSize : root.linearGaugeHeight
+                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : content.iconSize
+                    orientation: root.vertical ? Qt.Horizontal : Qt.Vertical
                     ratio: Math.max(0.2, Services.SystemUsage.cpuPerc)
                     fillColor: root.usageColor(Services.SystemUsage.cpuPerc)
                 }
             }
 
             // CPU Temperature
-            ColumnLayout {
-                Layout.alignment: Qt.AlignHCenter
-                spacing: 3
+            GridLayout {
+                Layout.alignment: Qt.AlignCenter
+                columns: root.vertical ? 1 : 2
+                rowSpacing: 3
+                columnSpacing: 4
 
                 LucideIcon {
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
                     Layout.preferredWidth: content.iconSize
                     Layout.preferredHeight: content.iconSize
                     name: "flame"
@@ -155,10 +175,10 @@ AbstractButton {
                 }
 
                 LinearGauge {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: content.iconSize
-                    Layout.preferredHeight: root.linearGaugeHeight
-                    orientation: Qt.Horizontal
+                    Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
+                    Layout.preferredWidth: root.vertical ? content.iconSize : root.linearGaugeHeight
+                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : content.iconSize
+                    orientation: root.vertical ? Qt.Horizontal : Qt.Vertical
                     ratio: Services.SystemUsage.cpuTempPerc
                     fillColor: root.tempColor(Services.SystemUsage.cpuTemp)
                 }
