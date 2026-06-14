@@ -5,9 +5,12 @@ import Quickshell
 Singleton {
     property string theme: "catppuccin"
 
-    // Bar position on the screen: "left", "right", "top" or "bottom".
-    // "left"/"right" render a vertical bar, "top"/"bottom" a horizontal one.
-    property string position: "top"
+    // Bar orientation: "vertical" or "horizontal".
+    property string position: "horizontal"
 
-    readonly property bool vertical: position === "left" || position === "right"
+    readonly property bool vertical: position === "vertical"
+
+    // Screen edge the bar is anchored to. Defaults to "left" for a vertical bar
+    // and "top" for a horizontal one; override to "right"/"bottom" if wanted.
+    property string edge: vertical ? "left" : "top"
 }

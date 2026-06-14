@@ -17,7 +17,7 @@ Variants {
         required property ShellScreen modelData
 
         readonly property int popupWidth: 360
-        readonly property int topOffset: Config.position === "top" ? Style.barHeight + Style.barMarginTop + Tokens.space3 : Tokens.space5
+        readonly property int topOffset: Config.edge === "top" ? Style.barHeight + Style.barMarginTop + Tokens.space3 : Tokens.space5
         property bool keepVisible: Services.Notification.popupModel.count > 0
         property var animateConnection: null
 

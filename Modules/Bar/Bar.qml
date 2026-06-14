@@ -31,17 +31,17 @@ PanelWindow {
 
     // Anchor to every edge except the interior one (opposite the bar's screen edge).
     anchors {
-        top: Config.position !== "bottom"
-        bottom: Config.position !== "top"
-        left: Config.position !== "right"
-        right: Config.position !== "left"
+        top: Config.edge !== "bottom"
+        bottom: Config.edge !== "top"
+        left: Config.edge !== "right"
+        right: Config.edge !== "left"
     }
 
     margins {
-        top: Config.position === "bottom" ? 0 : barMargin
-        bottom: Config.position === "top" ? 0 : barMargin
-        left: Config.position === "right" ? 0 : barMargin
-        right: Config.position === "left" ? 0 : barMargin
+        top: Config.edge === "bottom" ? 0 : barMargin
+        bottom: Config.edge === "top" ? 0 : barMargin
+        left: Config.edge === "right" ? 0 : barMargin
+        right: Config.edge === "left" ? 0 : barMargin
     }
 
     implicitWidth: barThickness
