@@ -2,34 +2,33 @@
 
 ![](./Assets/illustration.png)
 
-Simple bar built with [QML](https://doc.qt.io/qt-6/qtqml-documents-topic.html)/[Quickshell](https://quickshell.org/) for [Hyprland](https://hypr.land/).
+A simple, themeable bar built with [QML](https://doc.qt.io/qt-6/qtqml-documents-topic.html)/[Quickshell](https://quickshell.org/) for [Hyprland](https://hypr.land/). Runs horizontally (top/bottom) or vertically (left/right).
 
 ## Features
 
 - Hyprland workspaces
-- Configurable themes
-- Notifications
-- System tray
 - Clock
-- Network status
+- System tray
+- Network and Bluetooth status
 - Audio volume
-- Media player with cover popup
-- CAVA audio visualizer
+- Media player with cover popup and CAVA visualizer
 - Weather from Open-Meteo
-- CPU and memory status
+- CPU, memory and temperature monitor
+- Notifications
+- Multiple built-in themes
 
 ## Requirements
 
 - `quickshell`
 - `hyprland`
-- `cava` for audio visualizer
-- `curl`
-- `lm_sensors` for CPU temperature
-- `Symbols Nerd Font`
+- `cava` — audio visualizer
+- `lm_sensors` — CPU temperature
+- `curl` — weather
+- A Nerd Font (e.g. `Maple Mono NF`)
 
 ## Getting started
 
-Clone the repo in your quickshell config:
+Clone the repo into your quickshell config:
 
 ```sh
 git clone https://github.com/nino-mau/quickshell-bar.git ~/.config/quickshell/bar
@@ -41,4 +40,13 @@ Run it with:
 qs -c bar
 ```
 
-## Demo
+## Configuration
+
+Edit `Commons/Config.qml`:
+
+- `position` — `"horizontal"` (top) or `"vertical"` (left)
+- `edge` — optional override of the screen edge (`"top"`/`"bottom"`/`"left"`/`"right"`)
+- `theme` — `"catppuccin"`, `"rose-pine"`, `"tokyo-night"` or `"anime"`
+
+Themes live in `themes.json`; add your own by copying an existing entry and
+setting its `theme` name. The bar reloads automatically on save.
