@@ -12,6 +12,8 @@ AbstractButton {
     property color baseColor
     property bool square: false
     property bool vertical: true
+    // Override to set a fixed launcher icon size; defaults to the capsule-derived size.
+    property int iconSize: capsule.iconSize + 1
 
     Layout.fillWidth: root.vertical
     Layout.fillHeight: !root.vertical
@@ -53,7 +55,7 @@ AbstractButton {
         SvgIcon {
             anchors.centerIn: parent
             source: Qt.resolvedUrl(Quickshell.shellDir + "/Assets/Icons/arch.svg")
-            size: capsule.iconSize - 4
+            size: root.iconSize
             color: capsule.textColor
             sourceColor: "#1793d1"
         }
