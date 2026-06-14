@@ -41,6 +41,7 @@ AbstractButton {
         baseColor: root.baseColor
         hovered: root.hovered || root.down
         square: root.square
+        vertical: root.vertical
     }
 
     contentItem: Item {
@@ -49,25 +50,12 @@ AbstractButton {
         implicitWidth: capsule.implicitHeight
         implicitHeight: capsule.implicitHeight
 
-        readonly property int capsuleBaseSize: width > 0 ? width : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
-        readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
-
         SvgIcon {
             anchors.centerIn: parent
-            anchors.horizontalCenterOffset: 0.5
             source: Qt.resolvedUrl(Quickshell.shellDir + "/Assets/Icons/arch.svg")
-            size: iconSize - 4
+            size: capsule.iconSize - 4
             color: capsule.textColor
             sourceColor: "#1793d1"
         }
-
-        // Icon {
-        //     Layout.alignment: Qt.AlignHCenter
-        //     anchors.centerIn: parent
-        //     name: "memory"
-        //     color: capsule.textcolor
-        //     size: content.iconSize
-        // }
     }
 }

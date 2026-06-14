@@ -20,10 +20,10 @@ AbstractButton {
     Layout.fillHeight: !root.vertical
     Layout.preferredHeight: Math.max(width > 0 ? width : capsule.implicitHeight, implicitHeight)
     Layout.preferredWidth: Math.max(height > 0 ? height : capsule.implicitHeight, implicitWidth)
-    topPadding: root.vertical ? Style.capsuleVerticalPadding : 0
-    bottomPadding: root.vertical ? Style.capsuleVerticalPadding : 0
-    leftPadding: root.vertical ? 0 : Style.capsuleVerticalPadding
-    rightPadding: root.vertical ? 0 : Style.capsuleVerticalPadding
+    topPadding: root.vertical ? capsule.contentPadding : 0
+    bottomPadding: root.vertical ? capsule.contentPadding : 0
+    leftPadding: root.vertical ? 0 : capsule.contentPadding
+    rightPadding: root.vertical ? 0 : capsule.contentPadding
     hoverEnabled: true
     Accessible.name: qsTr("Bluetooth")
 
@@ -66,6 +66,7 @@ AbstractButton {
         id: capsule
 
         square: true
+        vertical: root.vertical
         baseColor: root.baseColor
         hovered: root.hovered || root.down
     }
@@ -73,18 +74,13 @@ AbstractButton {
     contentItem: Item {
         id: content
 
-        readonly property int crossSize: root.vertical ? width : height
-        readonly property int capsuleBaseSize: crossSize > 0 ? crossSize : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
-        readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
-
         implicitWidth: layout.implicitWidth
         implicitHeight: layout.implicitHeight
 
         GridLayout {
             id: layout
 
-            property real textSpacing: Style.defaultCapsuleSpacing * root.expansionProgress
+            property real textSpacing: capsule.contentSpacing * root.expansionProgress
 
             anchors.centerIn: parent
             columns: root.vertical ? 1 : 2
@@ -94,11 +90,11 @@ AbstractButton {
             // Bluetooth icon
             LucideIcon {
                 Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: content.iconSize
-                Layout.preferredHeight: content.iconSize
+                Layout.preferredWidth: capsule.iconSize
+                Layout.preferredHeight: capsule.iconSize
                 name: root.bluetoothIcon
                 color: capsule.textColor
-                size: content.iconSize
+                size: capsule.iconSize
             }
 
             // Connected device name (horizontal, revealed on hover)
@@ -121,7 +117,7 @@ AbstractButton {
                     text: Services.Bluetooth.activeDeviceName
                     color: capsule.textColor
                     font.pixelSize: capsule.horizontalTextSize
-                    font.weight: Style.fontMedium
+                    font.weight: Tokens.fontMedium
                 }
             }
         }

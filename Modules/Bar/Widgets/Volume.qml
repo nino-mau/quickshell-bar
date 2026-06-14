@@ -21,10 +21,10 @@ AbstractButton {
     Layout.fillHeight: !root.vertical
     Layout.preferredHeight: Math.max(width > 0 ? width : capsule.implicitHeight, implicitHeight)
     Layout.preferredWidth: Math.max(height > 0 ? height : capsule.implicitHeight, implicitWidth)
-    topPadding: root.vertical ? Style.capsuleVerticalPadding * expansionProgress : 0
-    bottomPadding: root.vertical ? Style.capsuleVerticalPadding * expansionProgress : 0
-    leftPadding: root.vertical ? 0 : Style.capsuleVerticalPadding * expansionProgress
-    rightPadding: root.vertical ? 0 : Style.capsuleVerticalPadding * expansionProgress
+    topPadding: root.vertical ? capsule.contentPadding * expansionProgress : 0
+    bottomPadding: root.vertical ? capsule.contentPadding * expansionProgress : 0
+    leftPadding: root.vertical ? 0 : capsule.contentPadding * expansionProgress
+    rightPadding: root.vertical ? 0 : capsule.contentPadding * expansionProgress
     hoverEnabled: true
     Accessible.name: qsTr("Volume")
 
@@ -108,6 +108,7 @@ AbstractButton {
         id: capsule
 
         square: true
+        vertical: root.vertical
         baseColor: root.baseColor
         hovered: root.hovered || root.down
     }
@@ -115,22 +116,13 @@ AbstractButton {
     contentItem: Item {
         id: content
 
-        // readonly property real capsuleIconSizeRatio: 0.70
-        // readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
-        readonly property int crossSize: root.vertical ? width : height
-        readonly property int capsuleBaseSize: crossSize > 0 ? crossSize : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
-        readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
-        readonly property int textPadding: Math.round(capsuleBaseSize * Style.capsuleTextPaddingRatio)
-        readonly property int textSize: Math.max(1, capsuleBaseSize - textPadding * 2)
-
         implicitWidth: layout.implicitWidth
         implicitHeight: layout.implicitHeight
 
         GridLayout {
             id: layout
 
-            property real textSpacing: Style.defaultCapsuleSpacing * root.expansionProgress
+            property real textSpacing: capsule.contentSpacing * root.expansionProgress
 
             anchors.centerIn: parent
             columns: root.vertical ? 1 : 2
@@ -140,11 +132,11 @@ AbstractButton {
             // Volume icon
             LucideIcon {
                 Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: content.iconSize
-                Layout.preferredHeight: content.iconSize
+                Layout.preferredWidth: capsule.iconSize
+                Layout.preferredHeight: capsule.iconSize
                 name: root.volumeIcon
                 color: capsule.textColor
-                size: content.iconSize
+                size: capsule.iconSize
             }
 
             // Volume text
@@ -168,8 +160,8 @@ AbstractButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: Math.round(Services.Audio.volume * 100)
                     color: capsule.textColor
-                    font.pixelSize: root.vertical ? Style.textXSHalf : capsule.horizontalTextSize
-                    font.weight: Style.fontMedium
+                    font.pixelSize: root.vertical ? Tokens.textXSHalf : capsule.horizontalTextSize
+                    font.weight: Tokens.fontMedium
 
                     Behavior on color {
                         ColorAnimation {

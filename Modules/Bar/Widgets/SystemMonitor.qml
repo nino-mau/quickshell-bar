@@ -15,10 +15,6 @@ AbstractButton {
     property bool vertical: true
 
     readonly property int linearGaugeHeight: 3
-    // readonly property real capsuleIconSizeRatio: 0.60
-    // readonly property real capsuleIconPaddingRatio: (1 - capsuleIconSizeRatio) / 2
-    // readonly property real capsuleTextSizeRatio: 0.35
-    // readonly property real capsuleTextPaddingRatio: (1 - capsuleTextSizeRatio) / 2
 
     readonly property real warningUsageThreshold: 0.7
     readonly property real criticalUsageThreshold: 0.9
@@ -31,16 +27,15 @@ AbstractButton {
     Layout.fillHeight: !root.vertical
     Layout.preferredHeight: Math.max(capsule.implicitHeight, implicitHeight)
     Layout.preferredWidth: Math.max(capsule.implicitHeight, implicitWidth)
-    // The leading icon glyph is drawn with built-in font side-bearing, so its
-    // visible pixels sit slightly inset from its box. The trailing gauge bar is
-    // flush, so equal paddings read as unbalanced. Compensate the right side so
-    // the *visible* left/right gaps match.
+    // The row starts with an icon glyph (which carries font side-bearing
+    // whitespace) and ends with a flush gauge bar, so equal box padding looks
+    // left-heavy. Nudge the right padding so the *visible* gaps match.
     readonly property int iconOpticalInset: 3
 
-    topPadding: root.vertical ? Style.capsuleVerticalPadding : 0
-    bottomPadding: root.vertical ? Style.capsuleVerticalPadding : 0
-    leftPadding: root.vertical ? 0 : Style.capsuleVerticalPadding
-    rightPadding: root.vertical ? 0 : Style.capsuleVerticalPadding + iconOpticalInset
+    topPadding: root.vertical ? capsule.contentPadding : 0
+    bottomPadding: root.vertical ? capsule.contentPadding : 0
+    leftPadding: root.vertical ? 0 : capsule.contentPadding
+    rightPadding: root.vertical ? 0 : capsule.contentPadding + iconOpticalInset
     hoverEnabled: true
     Accessible.name: qsTr("System monitor")
 
@@ -81,6 +76,7 @@ AbstractButton {
     background: Capsule {
         id: capsule
 
+        vertical: root.vertical
         baseColor: root.baseColor
         hovered: root.hovered || root.down
     }
@@ -88,19 +84,11 @@ AbstractButton {
     contentItem: Item {
         id: content
 
-        readonly property int crossSize: root.vertical ? width : height
-        readonly property int capsuleBaseSize: crossSize > 0 ? crossSize : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
-        readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
-        readonly property int textPadding: Math.round(capsuleBaseSize * Style.capsuleTextPaddingRatio)
-        readonly property int textSize: Math.max(1, capsuleBaseSize - textPadding * 2)
-
         implicitWidth: layout.implicitWidth
         implicitHeight: layout.implicitHeight
 
         GridLayout {
             id: layout
-            anchors.verticalCenterOffset: root.vertical ? -1 : 0
             anchors.centerIn: parent
             columns: root.vertical ? 1 : 3
             rowSpacing: 8
@@ -115,17 +103,17 @@ AbstractButton {
 
                 LucideIcon {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
-                    Layout.preferredWidth: content.iconSize
-                    Layout.preferredHeight: content.iconSize
+                    Layout.preferredWidth: capsule.iconSize
+                    Layout.preferredHeight: capsule.iconSize
                     name: "cpu"
                     color: root.usageColor(Services.SystemUsage.memPerc)
-                    size: content.iconSize
+                    size: capsule.iconSize
                 }
 
                 LinearGauge {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
-                    Layout.preferredWidth: root.vertical ? content.iconSize : root.linearGaugeHeight
-                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : content.iconSize
+                    Layout.preferredWidth: root.vertical ? capsule.iconSize : root.linearGaugeHeight
+                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : capsule.iconSize
                     orientation: root.vertical ? Qt.Horizontal : Qt.Vertical
                     ratio: Math.max(0.2, Services.SystemUsage.memPerc)
                     fillColor: root.usageColor(Services.SystemUsage.memPerc)
@@ -141,17 +129,17 @@ AbstractButton {
 
                 LucideIcon {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
-                    Layout.preferredWidth: content.iconSize
-                    Layout.preferredHeight: content.iconSize
+                    Layout.preferredWidth: capsule.iconSize
+                    Layout.preferredHeight: capsule.iconSize
                     name: "gauge"
                     color: root.usageColor(Services.SystemUsage.cpuPerc)
-                    size: content.iconSize
+                    size: capsule.iconSize
                 }
 
                 LinearGauge {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
-                    Layout.preferredWidth: root.vertical ? content.iconSize : root.linearGaugeHeight
-                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : content.iconSize
+                    Layout.preferredWidth: root.vertical ? capsule.iconSize : root.linearGaugeHeight
+                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : capsule.iconSize
                     orientation: root.vertical ? Qt.Horizontal : Qt.Vertical
                     ratio: Math.max(0.2, Services.SystemUsage.cpuPerc)
                     fillColor: root.usageColor(Services.SystemUsage.cpuPerc)
@@ -167,17 +155,17 @@ AbstractButton {
 
                 LucideIcon {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
-                    Layout.preferredWidth: content.iconSize
-                    Layout.preferredHeight: content.iconSize
+                    Layout.preferredWidth: capsule.iconSize
+                    Layout.preferredHeight: capsule.iconSize
                     name: "flame"
                     color: root.tempColor(Services.SystemUsage.cpuTemp)
-                    size: content.iconSize
+                    size: capsule.iconSize
                 }
 
                 LinearGauge {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
-                    Layout.preferredWidth: root.vertical ? content.iconSize : root.linearGaugeHeight
-                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : content.iconSize
+                    Layout.preferredWidth: root.vertical ? capsule.iconSize : root.linearGaugeHeight
+                    Layout.preferredHeight: root.vertical ? root.linearGaugeHeight : capsule.iconSize
                     orientation: root.vertical ? Qt.Horizontal : Qt.Vertical
                     ratio: Services.SystemUsage.cpuTempPerc
                     fillColor: root.tempColor(Services.SystemUsage.cpuTemp)

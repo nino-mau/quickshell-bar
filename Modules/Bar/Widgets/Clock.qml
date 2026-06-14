@@ -42,8 +42,8 @@ Item {
             Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
             text: root.square ? Qt.formatDateTime(clock.date, "HH") : Qt.formatDateTime(clock.date, "HH:mm")
             color: root.textColor
-            font.pixelSize: root.square ? Math.max(14, Math.round(root.width * 0.55)) : Style.textBase
-            font.weight: Style.fontBold
+            font.pixelSize: root.square ? Math.max(14, Math.round(root.width * 0.55)) : Tokens.textBase
+            font.weight: Tokens.fontBold
             font.letterSpacing: root.square ? -0.8 : 0
         }
 
@@ -82,8 +82,8 @@ Item {
             Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
             text: root.square ? Qt.formatDateTime(clock.date, "mm") : Qt.formatDateTime(clock.date, "dd MMM")
             color: Theme.withAlpha(root.textColor, root.square ? 0.78 : 0.7)
-            font.pixelSize: root.square ? Math.max(13, Math.round(root.width * 0.50)) : Style.textSM
-            font.weight: Style.fontMedium
+            font.pixelSize: root.square ? Math.max(13, Math.round(root.width * 0.50)) : Tokens.textSM
+            font.weight: Tokens.fontMedium
             font.letterSpacing: root.square ? -0.8 : 0
         }
     }

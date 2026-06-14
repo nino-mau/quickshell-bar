@@ -17,10 +17,10 @@ AbstractButton {
     Layout.fillHeight: !root.vertical
     Layout.preferredHeight: Math.max(capsule.implicitHeight, implicitHeight)
     Layout.preferredWidth: Math.max(capsule.implicitHeight, implicitWidth)
-    topPadding: root.vertical ? Style.capsuleVerticalPadding : 0
-    bottomPadding: root.vertical ? Style.capsuleVerticalPadding : 0
-    leftPadding: root.vertical ? 0 : Style.capsuleVerticalPadding
-    rightPadding: root.vertical ? 0 : Style.capsuleVerticalPadding
+    topPadding: root.vertical ? capsule.contentPadding : 0
+    bottomPadding: root.vertical ? capsule.contentPadding : 0
+    leftPadding: root.vertical ? 0 : capsule.contentPadding
+    rightPadding: root.vertical ? 0 : capsule.contentPadding
     hoverEnabled: true
     Accessible.name: qsTr("Open launcher")
 
@@ -42,6 +42,7 @@ AbstractButton {
     background: Capsule {
         id: capsule
 
+        vertical: root.vertical
         baseColor: root.baseColor
         hovered: root.hovered || root.down
     }
@@ -49,20 +50,13 @@ AbstractButton {
     contentItem: Item {
         id: content
 
-        readonly property int crossSize: root.vertical ? width : height
-        readonly property int capsuleBaseSize: crossSize > 0 ? crossSize : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
-        readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
-        readonly property int textPadding: Math.round(capsuleBaseSize * Style.capsuleTextPaddingRatio)
-        readonly property int textSize: Math.max(1, capsuleBaseSize - textPadding * 2)
-
         implicitWidth: layout.implicitWidth
         implicitHeight: layout.implicitHeight
 
         GridLayout {
             id: layout
 
-            property real textSpacing: Services.Weather.hasWeather ? (root.vertical ? Style.defaultCapsuleSpacing : 6) : 0
+            property real textSpacing: Services.Weather.hasWeather ? (root.vertical ? capsule.contentSpacing : 6) : 0
 
             anchors.centerIn: parent
             columns: root.vertical ? 1 : 2
@@ -79,11 +73,11 @@ AbstractButton {
             // Weather icon
             LucideIcon {
                 Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: content.iconSize
-                Layout.preferredHeight: content.iconSize
+                Layout.preferredWidth: capsule.iconSize
+                Layout.preferredHeight: capsule.iconSize
                 name: Services.Weather.icon
                 color: capsule.textColor
-                size: content.iconSize
+                size: capsule.iconSize
             }
 
             // Weather text
@@ -104,8 +98,8 @@ AbstractButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.vertical ? Services.Weather.temperatureC : Services.Weather.temperatureText
                     color: capsule.textColor
-                    font.pixelSize: root.vertical ? content.textSize : capsule.horizontalTextSize
-                    font.weight: Style.fontMedium
+                    font.pixelSize: root.vertical ? capsule.textSize : capsule.horizontalTextSize
+                    font.weight: Tokens.fontMedium
                 }
 
                 Behavior on textWidth {

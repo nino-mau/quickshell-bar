@@ -21,6 +21,41 @@ Variants {
         property bool keepVisible: Services.Notification.popupModel.count > 0
         property var animateConnection: null
 
+        // Notification-toast styling (widget-specific; built from primitives).
+        QtObject {
+            id: toast
+
+            readonly property int radius: Tokens.radius3XL
+            readonly property int contentPadding: Tokens.space4
+            readonly property int horizontalGap: Tokens.space3
+            readonly property int verticalGap: Tokens.space2
+            readonly property int headerGap: Tokens.space2
+            readonly property int visualSize: Tokens.space12
+            readonly property int iconSize: Tokens.space8
+            readonly property int imageSourceSize: Tokens.space24
+            readonly property int visualRadius: Tokens.radiusLG
+            readonly property color visualBackground: "transparent"
+            readonly property real backgroundOpacity: 0.6
+            readonly property int borderWidth: Tokens.border1
+            readonly property color border: Theme.border
+            readonly property color background: Theme.bg0
+            readonly property color color: Theme.withAlpha(background, backgroundOpacity)
+            readonly property int closeButtonSize: Tokens.space5
+            readonly property int closeTextSize: Tokens.textLG
+            readonly property color closeColor: Theme.grey2
+            readonly property color closeHoverColor: Theme.red
+            readonly property color appColor: Theme.grey2
+            readonly property int appTextSize: Tokens.textXS
+            readonly property int appFontWeight: Tokens.fontMedium
+            readonly property color summaryColor: Theme.fg
+            readonly property int summaryTextSize: Tokens.textSM
+            readonly property int summaryFontWeight: Tokens.fontBold
+            readonly property color bodyColor: Theme.fg
+            readonly property real bodyOpacity: 0.78
+            readonly property int bodyTextSize: Tokens.textXS
+            readonly property int bodyMaxLines: 3
+        }
+
         screen: modelData
         color: "transparent"
         visible: keepVisible
@@ -273,14 +308,14 @@ Variants {
                     Rectangle {
                         id: card
 
-                        readonly property int contentPadding: Style.notificationToastContentPadding
+                        readonly property int contentPadding: toast.contentPadding
 
                         width: parent.width
                         implicitHeight: content.implicitHeight + contentPadding * 2
-                        radius: Style.notificationToastRadius
-                        color: Style.notificationToastColor
-                        border.width: Style.notificationToastBorderWidth
-                        border.color: Style.notificationToastBorder
+                        radius: toast.radius
+                        color: toast.color
+                        border.width: toast.borderWidth
+                        border.color: toast.border
 
                         MouseArea {
                             anchors.fill: parent
@@ -303,20 +338,20 @@ Variants {
 
                             anchors.fill: parent
                             anchors.margins: card.contentPadding
-                            spacing: Style.notificationToastHorizontalGap
+                            spacing: toast.horizontalGap
 
                             Item {
                                 visible: wrapper.hasVisual
-                                Layout.preferredWidth: visible ? Style.notificationToastVisualSize : 0
-                                Layout.preferredHeight: visible ? Style.notificationToastVisualSize : 0
+                                Layout.preferredWidth: visible ? toast.visualSize : 0
+                                Layout.preferredHeight: visible ? toast.visualSize : 0
                                 Layout.alignment: Qt.AlignVCenter
 
                                 ClippingRectangle {
-                                    width: Style.notificationToastVisualSize
-                                    height: Style.notificationToastVisualSize
+                                    width: toast.visualSize
+                                    height: toast.visualSize
                                     anchors.centerIn: parent
-                                    radius: Style.notificationToastVisualRadius
-                                    color: Style.notificationToastVisualBackground
+                                    radius: toast.visualRadius
+                                    color: toast.visualBackground
 
                                     Image {
                                         id: notificationImage
@@ -324,8 +359,8 @@ Variants {
                                         visible: wrapper.hasImage && status !== Image.Error
                                         anchors.fill: parent
                                         source: wrapper.image
-                                        sourceSize.width: Style.notificationToastImageSourceSize
-                                        sourceSize.height: Style.notificationToastImageSourceSize
+                                        sourceSize.width: toast.imageSourceSize
+                                        sourceSize.height: toast.imageSourceSize
                                         fillMode: Image.PreserveAspectCrop
                                         asynchronous: true
                                         cache: false
@@ -342,8 +377,8 @@ Variants {
 
                                             visible: wrapper.defaultIconSource.length > 0 && status === Image.Ready
                                             anchors.centerIn: parent
-                                            width: Style.notificationToastIconSize
-                                            height: Style.notificationToastIconSize
+                                            width: toast.iconSize
+                                            height: toast.iconSize
                                             source: wrapper.defaultIconSource
                                             asynchronous: true
                                         }
@@ -356,28 +391,28 @@ Variants {
 
                                 Layout.fillWidth: true
                                 Layout.alignment: Qt.AlignVCenter
-                                spacing: Style.notificationToastVerticalGap
+                                spacing: toast.verticalGap
 
                                 RowLayout {
                                     Layout.fillWidth: true
-                                    spacing: Style.notificationToastHeaderGap
+                                    spacing: toast.headerGap
 
                                     Text {
                                         Layout.fillWidth: true
                                         text: wrapper.appName
-                                        color: Style.notificationToastAppColor
+                                        color: toast.appColor
                                         elide: Text.ElideRight
                                         font.family: Style.defaultFontFamily
-                                        font.pixelSize: Style.notificationToastAppTextSize
+                                        font.pixelSize: toast.appTextSize
                                         font.styleName: ""
-                                        font.weight: Style.notificationToastAppFontWeight
+                                        font.weight: toast.appFontWeight
                                     }
 
                                     MouseArea {
                                         id: closeBtn
 
-                                        Layout.preferredWidth: Style.notificationToastCloseButtonSize
-                                        Layout.preferredHeight: Style.notificationToastCloseButtonSize
+                                        Layout.preferredWidth: toast.closeButtonSize
+                                        Layout.preferredHeight: toast.closeButtonSize
                                         hoverEnabled: true
                                         cursorShape: Qt.PointingHandCursor
 
@@ -389,9 +424,9 @@ Variants {
                                         Text {
                                             anchors.centerIn: parent
                                             text: "×"
-                                            color: closeBtn.containsMouse ? Style.notificationToastCloseHoverColor : Style.notificationToastCloseColor
+                                            color: closeBtn.containsMouse ? toast.closeHoverColor : toast.closeColor
                                             font.family: Style.defaultFontFamily
-                                            font.pixelSize: Style.notificationToastCloseTextSize
+                                            font.pixelSize: toast.closeTextSize
 
                                             Behavior on color {
                                                 ColorAnimation {
@@ -406,25 +441,25 @@ Variants {
                                 Text {
                                     Layout.fillWidth: true
                                     text: wrapper.summary.length > 0 ? wrapper.summary : qsTr("Notification")
-                                    color: Style.notificationToastSummaryColor
+                                    color: toast.summaryColor
                                     elide: Text.ElideRight
                                     font.family: Style.defaultFontFamily
-                                    font.pixelSize: Style.notificationToastSummaryTextSize
+                                    font.pixelSize: toast.summaryTextSize
                                     font.styleName: ""
-                                    font.weight: Style.notificationToastSummaryFontWeight
+                                    font.weight: toast.summaryFontWeight
                                 }
 
                                 Text {
                                     Layout.fillWidth: true
                                     visible: wrapper.body.length > 0
                                     text: wrapper.body
-                                    color: Style.notificationToastBodyColor
-                                    opacity: Style.notificationToastBodyOpacity
+                                    color: toast.bodyColor
+                                    opacity: toast.bodyOpacity
                                     wrapMode: Text.WordWrap
                                     elide: Text.ElideRight
-                                    maximumLineCount: Style.notificationToastBodyMaxLines
+                                    maximumLineCount: toast.bodyMaxLines
                                     font.family: Style.defaultFontFamily
-                                    font.pixelSize: Style.notificationToastBodyTextSize
+                                    font.pixelSize: toast.bodyTextSize
                                 }
                             }
                         }

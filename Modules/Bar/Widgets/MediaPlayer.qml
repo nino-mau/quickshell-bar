@@ -58,20 +58,21 @@ AbstractButton {
     TextMetrics {
         id: titleMetrics
         text: Services.Media.title
-        font.pixelSize: Style.textSM
-        font.weight: Style.fontMedium
+        font.pixelSize: Tokens.textSM
+        font.weight: Tokens.fontMedium
     }
 
     TextMetrics {
         id: artistMetrics
         text: Services.Media.artist
-        font.pixelSize: Style.textSM
-        font.weight: Style.fontMedium
+        font.pixelSize: Tokens.textSM
+        font.weight: Tokens.fontMedium
     }
 
     background: Capsule {
         id: capsule
 
+        vertical: root.vertical
         baseColor: root.baseColor
         hovered: root.hovered || root.down
         square: root.vertical && root.square
@@ -80,11 +81,6 @@ AbstractButton {
 
     contentItem: Item {
         id: content
-
-        readonly property int crossSize: root.vertical ? width : height
-        readonly property int capsuleBaseSize: crossSize > 0 ? crossSize : capsule.implicitHeight
-        readonly property int iconPadding: Math.round(capsuleBaseSize * Style.capsuleIconPaddingRatio)
-        readonly property int iconSize: Math.max(0, capsuleBaseSize - iconPadding * 2)
 
         implicitWidth: capsule.implicitHeight
         implicitHeight: capsule.implicitHeight
@@ -119,7 +115,7 @@ AbstractButton {
                 name: "pause"
                 opacity: Services.Media.isPlaying ? 0 : 1
                 color: capsule.textColor
-                size: content.iconSize
+                size: capsule.iconSize
             }
         }
 
@@ -189,7 +185,7 @@ AbstractButton {
                     text: titleClip.currentText
                     color: capsule.textColor
                     font.pixelSize: capsule.horizontalTextSize
-                    font.weight: Style.fontMedium
+                    font.weight: Tokens.fontMedium
                     horizontalAlignment: Text.AlignHCenter
                     elide: Text.ElideRight
                 }
@@ -203,7 +199,7 @@ AbstractButton {
                     text: titleClip.nextText
                     color: capsule.textColor
                     font.pixelSize: capsule.horizontalTextSize
-                    font.weight: Style.fontMedium
+                    font.weight: Tokens.fontMedium
                     horizontalAlignment: Text.AlignHCenter
                     elide: Text.ElideRight
                 }
@@ -266,7 +262,7 @@ AbstractButton {
 
                 Rectangle {
                     anchors.fill: parent
-                    radius: Style.radiusLG
+                    radius: Tokens.radiusLG
                     color: Theme.bg2
 
                     LucideIcon {
@@ -295,7 +291,7 @@ AbstractButton {
                             sourceItem: Rectangle {
                                 width: cover.width
                                 height: cover.height
-                                radius: Style.radiusLG
+                                radius: Tokens.radiusLG
                                 color: "white"
                             }
                         }
@@ -309,8 +305,8 @@ AbstractButton {
                 horizontalAlignment: Text.AlignHCenter
                 text: Services.Media.title.length > 0 ? Services.Media.title : qsTr("Nothing playing")
                 color: Theme.fg
-                font.pixelSize: Style.textSM
-                font.weight: Style.fontBold
+                font.pixelSize: Tokens.textSM
+                font.weight: Tokens.fontBold
                 elide: Text.ElideRight
             }
 
@@ -321,8 +317,8 @@ AbstractButton {
                 visible: Services.Media.artist.length > 0
                 text: Services.Media.artist
                 color: Theme.withAlpha(Theme.fg, 0.7)
-                font.pixelSize: Style.textXS
-                font.weight: Style.fontMedium
+                font.pixelSize: Tokens.textXS
+                font.weight: Tokens.fontMedium
                 elide: Text.ElideRight
             }
 

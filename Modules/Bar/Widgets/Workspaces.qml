@@ -19,7 +19,7 @@ Item {
     property int workspaceInactiveHeight: 22
     property int workspaceActiveHeight: 35
     property int workspaceGap: 5
-    property int workspaceRadius: Style.radiusFull
+    property int workspaceRadius: Tokens.radiusFull
     property int workspaceIconSize: 15
     property real activeIconOpacity: 1
     property real inactiveIconOpacity: 0
