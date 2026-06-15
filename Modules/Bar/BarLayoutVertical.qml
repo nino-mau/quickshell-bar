@@ -68,6 +68,9 @@ Item {
         Widgets.Tray {
             baseColor: Theme.bg2
         }
+        Widgets.Updates {
+            baseColor: Theme.bg2
+        }
         Widgets.Bluetooth {
             baseColor: Theme.bg2
         }

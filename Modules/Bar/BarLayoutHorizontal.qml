@@ -73,6 +73,10 @@ Item {
             vertical: false
             baseColor: Theme.bg2
         }
+        Widgets.Updates {
+            vertical: false
+            baseColor: Theme.bg2
+        }
         Widgets.Bluetooth {
             vertical: false
             baseColor: Theme.bg2
