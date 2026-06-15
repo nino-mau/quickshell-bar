@@ -81,7 +81,7 @@ AbstractButton {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: capsule.iconSize
                 Layout.preferredHeight: capsule.iconSize
-                name: root.updating ? "cloud-cog" : (root.hasUpdates ? "cloud-download" : "cloud-check")
+                name: root.updating ? "cloud-upload" : (root.hasUpdates ? "cloud-download" : "cloud-check")
                 color: root.accentColor
                 size: capsule.iconSize
 
