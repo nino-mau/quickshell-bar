@@ -10,13 +10,17 @@ Singleton {
     // Number of available package updates (repo + AUR when a helper is present).
     property int count: 0
     property string error: ""
+    // True while an upgrade (pacman/paru/yay) is running on the system.
+    property bool updating: false
 
     readonly property bool loading: updatesProcess.running
     readonly property bool hasUpdates: count > 0
     readonly property string countText: count > 99 ? "99+" : String(count)
 
-    // How often to re-check, in milliseconds (default: 30 minutes).
+    // How often to re-check the count, in milliseconds (default: 30 minutes).
     property int refreshInterval: 1800000
+    // How often to poll for a running upgrade, in milliseconds.
+    property int watchInterval: 3000
 
     Component.onCompleted: reload()
 
@@ -39,6 +43,16 @@ Singleton {
         error = "";
     }
 
+    function handleWatchResponse(exitCode: int): void {
+        // pgrep exits 0 when a matching process is found, 1 otherwise.
+        const running = exitCode === 0;
+        // When an upgrade finishes, refresh the count to reflect the result.
+        if (root.updating && !running) {
+            reload();
+        }
+        root.updating = running;
+    }
+
     function cleanText(value: var): string {
         return String(value ?? "").replace(/(\r\n|\n|\r)/g, "").trim();
     }
@@ -56,11 +70,32 @@ Singleton {
         onExited: code => root.handleResponse(code)
     }
 
+    Process {
+        id: watchProcess
+
+        // Match an in-progress upgrade by exact process name.
+        command: ["pgrep", "-x", "pacman|paru|yay|makepkg"]
+
+        onExited: code => root.handleWatchResponse(code)
+    }
+
     Timer {
         interval: root.refreshInterval
         running: true
         repeat: true
 
         onTriggered: root.reload()
+    }
+
+    Timer {
+        interval: root.watchInterval
+        running: true
+        repeat: true
+
+        onTriggered: {
+            if (!watchProcess.running) {
+                watchProcess.running = true;
+            }
+        }
     }
 }

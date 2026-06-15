@@ -14,7 +14,8 @@ AbstractButton {
     property bool vertical: true
 
     readonly property bool hasUpdates: Services.Updates.hasUpdates
-    readonly property color accentColor: hasUpdates ? Theme.yellow : capsule.textColor
+    readonly property bool updating: Services.Updates.updating
+    readonly property color accentColor: updating ? Theme.blue : (hasUpdates ? Theme.yellow : capsule.textColor)
 
     Layout.fillWidth: root.vertical
     Layout.fillHeight: !root.vertical
@@ -77,10 +78,12 @@ AbstractButton {
 
             // Updates icon
             LucideIcon {
+                id: updatesIcon
+
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: capsule.iconSize
                 Layout.preferredHeight: capsule.iconSize
-                name: root.hasUpdates ? "package" : "package-check"
+                name: root.updating ? "refresh-cw" : (root.hasUpdates ? "cloud-download" : "cloud-sync")
                 color: root.accentColor
                 size: capsule.iconSize
 
@@ -89,6 +92,17 @@ AbstractButton {
                         duration: 140
                         easing.type: Easing.InOutQuad
                     }
+                }
+
+                // Spin while an upgrade is in progress.
+                RotationAnimator {
+                    target: updatesIcon
+                    from: 0
+                    to: 360
+                    duration: 1000
+                    loops: Animation.Infinite
+                    running: root.updating
+                    onRunningChanged: if (!running) updatesIcon.rotation = 0
                 }
             }
 
