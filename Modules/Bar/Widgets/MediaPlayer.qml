@@ -98,7 +98,8 @@ AbstractButton {
                 id: visualizer
 
                 anchors.fill: parent
-                visible: Services.Media.hasPlayer
+                componentId: "bar:media:visualizer:vertical"
+                visible: root.vertical && Services.Media.hasPlayer
                 active: Services.Media.isPlaying
                 type: "mirrored"
                 spectrumBandCount: 3
@@ -127,10 +128,11 @@ AbstractButton {
             AudioVisualizer {
                 anchors.fill: parent
                 anchors.margins: 3
-                visible: Services.Media.hasPlayer
+                componentId: "bar:media:visualizer:horizontal"
+                visible: !root.vertical && Services.Media.hasPlayer
                 active: Services.Media.isPlaying
                 type: "mirrored"
-                spectrumBandCount: 16
+                spectrumBandCount: 30
                 minimumLevel: 0.04
                 maximumLevel: 0.7
                 colorOpacity: Services.Media.isPlaying ? 0.45 : 0.28

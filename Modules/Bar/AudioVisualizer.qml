@@ -18,7 +18,7 @@ Item {
     property color barColor: Theme.aqua
     property color fillColor: Theme.withAlpha(barColor, colorOpacity)
 
-    readonly property string componentId: "bar:media:visualizer"
+    property string componentId: "bar:media:visualizer"
     readonly property bool needsSpectrum: visible && active
     readonly property bool mirrored: type === "mirrored"
     readonly property var values: Services.Spectrum.values
