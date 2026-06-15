@@ -9,7 +9,6 @@ Item {
 
     property bool active: true
     property string type: "mirrored"
-    property int spectrumBandCount: 30
     property real minimumLevel: 0.04
     property real maximumLevel: 1
     property real levelScale: 1.8
@@ -23,29 +22,21 @@ Item {
     readonly property bool mirrored: type === "mirrored"
     readonly property var values: Services.Spectrum.values
     readonly property int valuesCount: values && values.length !== undefined ? values.length : 0
-    readonly property int sourceCount: valuesCount > 0 ? valuesCount : spectrumBandCount
+    readonly property int sourceCount: valuesCount > 0 ? valuesCount : Services.Spectrum.normalizedBandCount
     readonly property int totalBars: mirrored ? sourceCount * 2 : sourceCount
 
     opacity: active ? 1 : 0.25
 
     onNeedsSpectrumChanged: {
         if (needsSpectrum) {
-            Services.Spectrum.bandCount = spectrumBandCount;
             Services.Spectrum.registerComponent(componentId);
             return;
         }
         Services.Spectrum.unregisterComponent(componentId);
     }
 
-    onSpectrumBandCountChanged: {
-        if (needsSpectrum) {
-            Services.Spectrum.bandCount = spectrumBandCount;
-        }
-    }
-
     Component.onCompleted: {
         if (needsSpectrum) {
-            Services.Spectrum.bandCount = spectrumBandCount;
             Services.Spectrum.registerComponent(componentId);
         }
     }

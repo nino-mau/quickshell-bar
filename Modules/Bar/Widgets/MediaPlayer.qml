@@ -102,7 +102,6 @@ AbstractButton {
                 visible: root.vertical && Services.Media.hasPlayer
                 active: Services.Media.isPlaying
                 type: "mirrored"
-                spectrumBandCount: 3
                 minimumLevel: Services.Media.isPlaying ? 0.06 : 0.10
                 maximumLevel: 0.62
                 levelScale: 0.9
@@ -132,7 +131,6 @@ AbstractButton {
                 visible: !root.vertical && Services.Media.hasPlayer
                 active: Services.Media.isPlaying
                 type: "mirrored"
-                spectrumBandCount: 30
                 minimumLevel: 0.04
                 maximumLevel: 0.7
                 colorOpacity: Services.Media.isPlaying ? 0.45 : 0.28
