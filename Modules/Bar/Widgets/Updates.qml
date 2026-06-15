@@ -15,7 +15,7 @@ AbstractButton {
 
     readonly property bool hasUpdates: Services.Updates.hasUpdates
     readonly property bool updating: Services.Updates.updating
-    readonly property color accentColor: updating ? Theme.blue : (hasUpdates ? Theme.yellow : capsule.textColor)
+    readonly property color accentColor: updating ? Theme.blue : (hasUpdates ? Theme.purple : capsule.textColor)
 
     Layout.fillWidth: root.vertical
     Layout.fillHeight: !root.vertical
