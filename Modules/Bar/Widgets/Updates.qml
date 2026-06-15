@@ -78,8 +78,6 @@ AbstractButton {
 
             // Updates icon
             LucideIcon {
-                id: updatesIcon
-
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: capsule.iconSize
                 Layout.preferredHeight: capsule.iconSize
@@ -92,17 +90,6 @@ AbstractButton {
                         duration: 140
                         easing.type: Easing.InOutQuad
                     }
-                }
-
-                // Spin while an upgrade is in progress.
-                RotationAnimator {
-                    target: updatesIcon
-                    from: 0
-                    to: 360
-                    duration: 1000
-                    loops: Animation.Infinite
-                    running: root.updating
-                    onRunningChanged: if (!running) updatesIcon.rotation = 0
                 }
             }
 
