@@ -16,7 +16,17 @@ AbstractButton {
     property bool vertical: true
 
     readonly property int visualizerClipPadding: 4
-    readonly property real visualizerPauseOpacity: 0.7
+
+    // Visualizer fill opacity, per orientation and playback state.
+    readonly property real visualizerVerticalOpacity: 0.15
+    readonly property real visualizerVerticalPauseOpacity: 0.28
+    readonly property real visualizerHorizontalOpacity: 0.45
+    readonly property real visualizerHorizontalPauseOpacity: 0.28
+
+    readonly property int textSize: Tokens.textSM
+    readonly property int textWeight: Tokens.fontDemiBold
+
+    readonly property string pausePrefix: " "
 
     // Horizontal "title pill" sizing
     readonly property int titlePadding: 30
@@ -41,6 +51,12 @@ AbstractButton {
         }
     }
 
+    onDoubleClicked: {
+        if (Services.Media.hasPlayer && Services.Media.isPlaying) {
+            Services.Media.pause();
+        }
+    }
+
     HoverHandler {
         cursorShape: Services.Media.hasPlayer ? Qt.PointingHandCursor : Qt.ArrowCursor
     }
@@ -58,15 +74,15 @@ AbstractButton {
     TextMetrics {
         id: titleMetrics
         text: Services.Media.title
-        font.pixelSize: Tokens.textSM
-        font.weight: Tokens.fontMedium
+        font.pixelSize: root.textSize
+        font.weight: root.textWeight
     }
 
     TextMetrics {
         id: artistMetrics
         text: Services.Media.artist
-        font.pixelSize: Tokens.textSM
-        font.weight: Tokens.fontMedium
+        font.pixelSize: root.textSize
+        font.weight: root.textWeight
     }
 
     background: Capsule {
@@ -106,7 +122,7 @@ AbstractButton {
                 maximumLevel: 0.62
                 levelScale: 0.9
                 barWidthRatio: 0.68
-                colorOpacity: Services.Media.isPlaying ? 0.9 : root.visualizerPauseOpacity
+                colorOpacity: Services.Media.isPlaying ? root.visualizerVerticalOpacity : root.visualizerVerticalPauseOpacity
                 barColor: capsule.textColor
             }
 
@@ -133,7 +149,7 @@ AbstractButton {
                 type: "mirrored"
                 minimumLevel: 0.04
                 maximumLevel: 0.7
-                colorOpacity: Services.Media.isPlaying ? 0.45 : 0.28
+                colorOpacity: Services.Media.isPlaying ? root.visualizerHorizontalOpacity : root.visualizerHorizontalPauseOpacity
                 barColor: capsule.textColor
             }
 
@@ -182,10 +198,11 @@ AbstractButton {
 
                     width: parent.width
                     y: (parent.height - implicitHeight) / 2 + titleClip.slideProgress * parent.height
-                    text: titleClip.currentText
+                    text: Services.Media.isPlaying ? titleClip.currentText : root.pausePrefix + titleClip.currentText
                     color: capsule.textColor
                     font.pixelSize: capsule.horizontalTextSize
-                    font.weight: Tokens.fontMedium
+                    font.styleName: ''
+                    font.weight: root.textWeight
                     horizontalAlignment: Text.AlignHCenter
                     elide: Text.ElideRight
                 }
@@ -196,10 +213,11 @@ AbstractButton {
                     visible: slideAnimation.running
                     width: parent.width
                     y: (parent.height - implicitHeight) / 2 - (1 - titleClip.slideProgress) * parent.height
-                    text: titleClip.nextText
+                    text: Services.Media.isPlaying ? titleClip.currentText : root.pausePrefix + titleClip.currentText
                     color: capsule.textColor
                     font.pixelSize: capsule.horizontalTextSize
-                    font.weight: Tokens.fontMedium
+                    font.styleName: ''
+                    font.weight: root.textWeight
                     horizontalAlignment: Text.AlignHCenter
                     elide: Text.ElideRight
                 }
