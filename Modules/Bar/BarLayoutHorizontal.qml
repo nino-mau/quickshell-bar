@@ -27,11 +27,11 @@ Item {
         }
         Widgets.MediaPlayer {
             vertical: false
-            baseColor: Theme.bg2
+            baseColor: Theme.blue
         }
         Widgets.Weather {
             vertical: false
-            baseColor: Theme.bg2
+            baseColor: Theme.aqua
         }
         Widgets.SystemMonitor {
             vertical: false
@@ -75,19 +75,19 @@ Item {
         }
         Widgets.Updates {
             vertical: false
-            baseColor: Theme.bg2
+            baseColor: Theme.aqua
         }
         Widgets.Bluetooth {
             vertical: false
-            baseColor: Theme.bg2
+            baseColor: Theme.blue
         }
         Widgets.Network {
             vertical: false
-            baseColor: Theme.bg2
+            baseColor: Theme.purple
         }
         Widgets.Volume {
             vertical: false
-            baseColor: Theme.bg2
+            baseColor: Theme.red
         }
     }
 }
