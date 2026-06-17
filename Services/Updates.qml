@@ -73,8 +73,11 @@ Singleton {
     Process {
         id: watchProcess
 
-        // Match an in-progress upgrade by exact process name.
-        command: ["pgrep", "-x", "pacman|paru|yay|makepkg"]
+        // Detect an upgrade by a running pacman/paru/yay process, for the whole
+        // session (build, prompts, install) rather than just the brief lock window.
+        // Filter out our own read-only check: `paru -Qua`/`yay -Qua` (any -Q query)
+        // and checkupdates' pacman (uses a temp "checkup-db" path).
+        command: ["sh", "-c", "pgrep -ax 'pacman|paru|yay' | grep -vqE 'checkup-db|[-]Q'"]
 
         onExited: code => root.handleWatchResponse(code)
     }

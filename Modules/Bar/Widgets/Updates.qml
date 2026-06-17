@@ -14,8 +14,18 @@ AbstractButton {
     property bool vertical: true
 
     readonly property bool hasUpdates: Services.Updates.hasUpdates
-    readonly property bool updating: Services.Updates.updating
-    readonly property color accentColor: updating ? Theme.blue : (hasUpdates ? Theme.purple : capsule.textColor)
+    readonly property bool checking: Services.Updates.loading
+    readonly property bool installing: Services.Updates.updating
+    readonly property color accentColor: installing ? Theme.blue : (hasUpdates ? Theme.purple : capsule.textColor)
+
+    // One distinct icon per state: installing > available > checking > up to date.
+    // "available" outranks "checking" so a background re-check never disturbs the
+    // icon + count once updates are known.
+    readonly property string installingIcon: 'cloud-download'
+    readonly property string checkingIcon: 'loader-circle'
+    readonly property string availableIcon: 'box'
+    readonly property string upToDateIcon: 'box'
+    readonly property string currentIcon: installing ? installingIcon : (hasUpdates ? availableIcon : (checking ? checkingIcon : upToDateIcon))
 
     Layout.fillWidth: root.vertical
     Layout.fillHeight: !root.vertical
@@ -78,12 +88,51 @@ AbstractButton {
 
             // Updates icon
             LucideIcon {
+                id: updatesIcon
+
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: capsule.iconSize
                 Layout.preferredHeight: capsule.iconSize
-                name: root.updating ? "cloud-upload" : (root.hasUpdates ? "cloud-download" : "cloud-check")
+                name: root.currentIcon
                 color: root.accentColor
                 size: capsule.iconSize
+
+                // Spin the refresh icon while checking for updates. Use a plain
+                // RotationAnimation (not an Animator) so the property is updated
+                // on the main thread and resets cleanly to 0 when checking stops.
+                RotationAnimation {
+                    target: updatesIcon
+                    from: 0
+                    to: 360
+                    duration: 1000
+                    loops: Animation.Infinite
+                    running: root.currentIcon === root.checkingIcon
+                    onStopped: updatesIcon.rotation = 0
+                }
+
+                // Pulse the package icon while an upgrade is downloading/installing.
+                SequentialAnimation {
+                    running: root.installing
+                    loops: Animation.Infinite
+                    onStopped: updatesIcon.opacity = 1
+
+                    NumberAnimation {
+                        target: updatesIcon
+                        property: "opacity"
+                        from: 1
+                        to: 0.4
+                        duration: 600
+                        easing.type: Easing.InOutSine
+                    }
+                    NumberAnimation {
+                        target: updatesIcon
+                        property: "opacity"
+                        from: 0.4
+                        to: 1
+                        duration: 600
+                        easing.type: Easing.InOutSine
+                    }
+                }
 
                 Behavior on color {
                     ColorAnimation {
