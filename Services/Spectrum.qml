@@ -12,7 +12,7 @@ Singleton {
     // vertical bar, a wide 30-band one on a horizontal bar. Authoritative here
     // so nothing else can clobber the generated config.
     property int verticalBandCount: 3
-    property int horizontalBandCount: 30
+    property int horizontalBandCount: 20
     readonly property int bandCount: Config.vertical ? verticalBandCount : horizontalBandCount
     property var values: []
     property bool idle: true
