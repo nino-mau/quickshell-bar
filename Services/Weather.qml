@@ -84,7 +84,7 @@ Singleton {
 
     function weatherIcon(code: int, day: bool): string {
         if (code === 0 || code === 1) {
-            return day ? "sun" : "moon-star";
+            return day ? "cloud-sun" : "moon-star";
         }
         if (code === 2) {
             return day ? "cloud-sun" : "cloud-moon";
