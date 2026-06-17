@@ -13,8 +13,14 @@ AbstractButton {
     property color baseColor
     property bool vertical: true
     readonly property string bluetoothIcon: getBluetoothIcon()
-    readonly property bool showingDeviceName: !root.vertical && (root.hovered || root.down) && Services.Bluetooth.connected && Services.Bluetooth.activeDeviceName.length > 0
+    readonly property bool hasDeviceName: Services.Bluetooth.connected && Services.Bluetooth.activeDeviceName.length > 0
+    // Horizontal bars reveal the name inline; vertical bars are too narrow, so
+    // they show it in a hover tooltip beside the widget instead.
+    readonly property bool showingDeviceName: !root.vertical && (root.hovered || root.down) && hasDeviceName
+    readonly property bool showingNameTooltip: root.vertical && root.hovered && hasDeviceName
     property real expansionProgress: showingDeviceName ? 1 : 0
+
+    onShowingNameTooltipChanged: showingNameTooltip ? nameTooltip.open() : nameTooltip.close()
 
     Layout.fillWidth: root.vertical
     Layout.fillHeight: !root.vertical
@@ -69,6 +75,28 @@ AbstractButton {
         vertical: root.vertical
         baseColor: root.baseColor
         hovered: root.hovered || root.down
+    }
+
+    // Connected device name shown beside the widget on a vertical bar.
+    BarPopup {
+        id: nameTooltip
+
+        readonly property int pad: 8
+
+        anchor.item: root
+        grabsFocus: false
+        contentWidth: tooltipText.implicitWidth + pad * 2
+        contentHeight: tooltipText.implicitHeight + pad * 2
+
+        Text {
+            id: tooltipText
+
+            anchors.centerIn: parent
+            text: Services.Bluetooth.activeDeviceName
+            color: Theme.fg
+            font.pixelSize: Tokens.textSM
+            font.weight: Tokens.fontMedium
+        }
     }
 
     contentItem: Item {

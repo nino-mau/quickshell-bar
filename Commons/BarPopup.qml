@@ -27,6 +27,9 @@ PopupWindow {
     property int closeDuration: 140
     property bool popupOpen: false
     property bool closing: false
+    // Click-opened popups grab focus so an outside click dismisses them. Hover
+    // tooltips want to stay passive, so let callers turn the grab off.
+    property bool grabsFocus: true
 
     readonly property bool vertical: Config.vertical
 
@@ -71,7 +74,7 @@ PopupWindow {
     }
 
     HyprlandFocusGrab {
-        active: root.popupOpen
+        active: root.popupOpen && root.grabsFocus
         windows: [QsWindow.window]
 
         onCleared: root.close()
