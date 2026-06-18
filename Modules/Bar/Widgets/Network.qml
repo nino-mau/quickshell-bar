@@ -47,21 +47,21 @@ AbstractButton {
 
     function getNetworkIcon(): string {
         if (!Services.Network.connected) {
-            return Icons.get("wifi-off");
+            return "signal-wifi-off-fill";
         }
         if (Services.Network.signalStrength === 0) {
-            return Icons.get("wifi-zero");
+            return "signal-wifi-1-fill";
         }
         if (Services.Network.signalStrength < 0.25) {
-            return Icons.get("wifi-low");
+            return "signal-wifi-1-fill";
         }
         if (Services.Network.signalStrength < 0.5) {
-            return Icons.get("wifi-high");
+            return "signal-wifi-2-fill";
         }
         if (Services.Network.signalStrength < 0.75) {
-            return Icons.get("wifi");
+            return "signal-wifi-3-fill";
         }
-        return Icons.get("wifi");
+        return "signal-wifi-fill";
     }
 
     HoverHandler {
@@ -99,7 +99,7 @@ AbstractButton {
             columnSpacing: textSpacing
 
             // Network icon
-            LucideIcon {
+            RemixIcon {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: capsule.iconSize
                 Layout.preferredHeight: capsule.iconSize

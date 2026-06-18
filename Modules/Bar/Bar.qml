@@ -17,7 +17,7 @@ PanelWindow {
     // Style
 
     readonly property int barThickness: vertical ? 50 : 44
-    readonly property int barRadius: Style.defaultRadius
+    readonly property int barRadius: vertical ? Style.defaultRadius : Style.defaultRadius
     readonly property int barMargin: 16
     readonly property int barPadding: 8
     readonly property int barGap: 10

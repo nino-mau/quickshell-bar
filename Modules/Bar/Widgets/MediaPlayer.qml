@@ -126,9 +126,9 @@ AbstractButton {
                 barColor: capsule.textColor
             }
 
-            LucideIcon {
+            RemixIcon {
                 anchors.centerIn: parent
-                name: "pause"
+                name: "pause-fill"
                 opacity: Services.Media.isPlaying ? 0 : 1
                 color: capsule.textColor
                 size: capsule.iconSize
@@ -283,9 +283,9 @@ AbstractButton {
                     radius: Tokens.radiusLG
                     color: Theme.bg2
 
-                    LucideIcon {
+                    RemixIcon {
                         anchors.centerIn: parent
-                        name: "music"
+                        name: "music-line"
                         size: 36
                         color: Theme.withAlpha(Theme.fg, 0.5)
                     }
@@ -386,9 +386,9 @@ AbstractButton {
                     cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                     onClicked: Services.Media.previous()
 
-                    LucideIcon {
+                    RemixIcon {
                         anchors.centerIn: parent
-                        name: "skip-back"
+                        name: "skip-back-line"
                         size: 18
                         color: prevButton.enabled ? Theme.fg : Theme.withAlpha(Theme.fg, 0.35)
                     }
@@ -416,9 +416,9 @@ AbstractButton {
                         }
                     }
 
-                    LucideIcon {
+                    RemixIcon {
                         anchors.centerIn: parent
-                        name: Services.Media.isPlaying ? "pause" : "play"
+                        name: Services.Media.isPlaying ? "pause-fill" : "play-fill"
                         size: 18
                         color: Theme.fg
                     }
@@ -434,9 +434,9 @@ AbstractButton {
                     cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                     onClicked: Services.Media.next()
 
-                    LucideIcon {
+                    RemixIcon {
                         anchors.centerIn: parent
-                        name: "skip-forward"
+                        name: "skip-forward-line"
                         size: 18
                         color: nextButton.enabled ? Theme.fg : Theme.withAlpha(Theme.fg, 0.35)
                     }

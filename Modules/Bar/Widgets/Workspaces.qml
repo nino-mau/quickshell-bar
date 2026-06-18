@@ -14,7 +14,7 @@ Item {
     property bool vertical: true
     property int workspaceCount: 5
 
-    property var workspaceIcons: ["terminal.svg", "firefox.svg", "terminal.svg", "shapes.svg", "layout.svg"]
+    property var workspaceIcons: ["terminal-line", "firefox-fill", "terminal-line", "shapes-fill", "layout-2-fill"]
     property int workspaceWidth: 22
     property int workspaceInactiveHeight: 22
     property int workspaceActiveHeight: 35
@@ -82,9 +82,8 @@ Item {
         return workspaceMonitor.length > 0 && currentMonitor.length > 0 && workspaceMonitor !== currentMonitor;
     }
 
-    function workspaceIconSource(workspaceId: int): url {
-        const iconFile = workspaceIcons[workspaceId - 1] || workspaceIcons[0];
-        return Qt.resolvedUrl(Quickshell.shellDir + "/Assets/Icons/" + iconFile);
+    function workspaceIconName(workspaceId: int): string {
+        return workspaceIcons[workspaceId - 1] || workspaceIcons[0] || "terminal-line";
     }
 
     GridLayout {
@@ -167,11 +166,10 @@ Item {
                         visible: workspaceButton.pulse > 0
                     }
 
-                    SvgIcon {
+                    RemixIcon {
                         anchors.centerIn: parent
-                        source: root.workspaceIconSource(workspaceButton.workspaceId)
+                        name: root.workspaceIconName(workspaceButton.workspaceId)
                         color: workspaceButton.active ? root.activeTextColor : root.inactiveTextColor
-                        sourceColor: "black"
                         opacity: workspaceButton.active ? root.activeIconOpacity : root.inactiveIconOpacity
                         size: root.workspaceIconSize
 

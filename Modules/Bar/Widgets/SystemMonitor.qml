@@ -23,6 +23,10 @@ AbstractButton {
 
     readonly property string usageRegistrationId: "system-monitor-" + Math.random().toString(36).slice(2)
 
+    readonly property string memoryIcon: 'cpu-line'
+    readonly property string cpuIcon: 'speed-up-line'
+    readonly property string cpuTempIcon: 'temp-hot-line'
+
     Layout.fillWidth: root.vertical
     Layout.fillHeight: !root.vertical
     Layout.preferredHeight: Math.max(capsule.implicitHeight, implicitHeight)
@@ -101,11 +105,11 @@ AbstractButton {
                 rowSpacing: 3
                 columnSpacing: 4
 
-                LucideIcon {
+                RemixIcon {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
                     Layout.preferredWidth: capsule.iconSize
                     Layout.preferredHeight: capsule.iconSize
-                    name: "cpu"
+                    name: root.memoryIcon
                     color: root.usageColor(Services.SystemUsage.memPerc)
                     size: capsule.iconSize
                 }
@@ -127,11 +131,11 @@ AbstractButton {
                 rowSpacing: 3
                 columnSpacing: 4
 
-                LucideIcon {
+                RemixIcon {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
                     Layout.preferredWidth: capsule.iconSize
                     Layout.preferredHeight: capsule.iconSize
-                    name: "gauge"
+                    name: root.cpuIcon
                     color: root.usageColor(Services.SystemUsage.cpuPerc)
                     size: capsule.iconSize
                 }
@@ -153,11 +157,11 @@ AbstractButton {
                 rowSpacing: 3
                 columnSpacing: 4
 
-                LucideIcon {
+                RemixIcon {
                     Layout.alignment: root.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
                     Layout.preferredWidth: capsule.iconSize
                     Layout.preferredHeight: capsule.iconSize
-                    name: "flame"
+                    name: root.cpuTempIcon
                     color: root.tempColor(Services.SystemUsage.cpuTemp)
                     size: capsule.iconSize
                 }

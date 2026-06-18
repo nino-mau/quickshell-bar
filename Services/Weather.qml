@@ -16,7 +16,7 @@ Singleton {
 
     readonly property bool loading: locationProcess.running || weatherProcess.running
     readonly property bool hasWeather: weatherCode >= 0
-    readonly property string icon: hasWeather ? weatherIcon(weatherCode, isDay) : "cloud"
+    readonly property string icon: hasWeather ? weatherIcon(weatherCode, isDay) : "cloud-line"
     readonly property string temperatureText: hasWeather ? temperatureC + "°C" : "--"
     readonly property string temperatureTextSimple: hasWeather ? temperatureC + "°" : "--"
 
@@ -83,31 +83,34 @@ Singleton {
     }
 
     function weatherIcon(code: int, day: bool): string {
-        if (code === 0 || code === 1) {
-            return day ? "cloud-sun" : "moon-star";
+        if (code === 0) {
+            return day ? "sun-line" : "moon-clear-line";
+        }
+        if (code === 1) {
+            return day ? "sun-cloudy-line" : "moon-clear-line";
         }
         if (code === 2) {
-            return day ? "cloud-sun" : "cloud-moon";
+            return day ? "sun-cloudy-line" : "moon-cloudy-line";
         }
         if (code === 3) {
-            return "cloudy";
+            return "cloud-line";
         }
         if (code === 45 || code === 48) {
-            return "cloud-fog";
+            return "mist-line";
         }
         if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
-            return code >= 65 || code === 82 ? "cloud-rain" : "cloud-drizzle";
+            return code >= 65 || code === 82 ? "rainy-line" : "drizzle-line";
         }
         if ((code >= 71 && code <= 77) || code === 85 || code === 86) {
-            return "cloud-snow";
+            return "snowy-line";
         }
         if (code === 95) {
-            return "cloud-lightning";
+            return "thunderstorms-line";
         }
         if (code === 96 || code === 99) {
-            return "cloud-hail";
+            return "hail-line";
         }
-        return "cloud";
+        return "cloud-line";
     }
 
     function isCoords(value: string): bool {

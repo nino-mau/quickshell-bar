@@ -48,15 +48,15 @@ AbstractButton {
 
     function getBluetoothIcon(): string {
         if (!Services.Bluetooth.bluetoothAvailable || !Services.Bluetooth.enabled || Services.Bluetooth.blocked) {
-            return Icons.get("bluetooth-off");
+            return "bluetooth-line";
         }
         if (Services.Bluetooth.busy || Services.Bluetooth.discovering) {
-            return Icons.get("bluetooth-searching");
+            return "bluetooth-connect-line";
         }
         if (Services.Bluetooth.connected) {
-            return Icons.get("bluetooth-connected");
+            return "bluetooth-connect-line";
         }
-        return Icons.get("bluetooth");
+        return "bluetooth-line";
     }
 
     HoverHandler {
@@ -116,7 +116,7 @@ AbstractButton {
             columnSpacing: textSpacing
 
             // Bluetooth icon
-            LucideIcon {
+            RemixIcon {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: capsule.iconSize
                 Layout.preferredHeight: capsule.iconSize

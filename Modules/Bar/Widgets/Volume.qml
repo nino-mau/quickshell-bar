@@ -65,20 +65,17 @@ AbstractButton {
         return false;
     }
 
-    function getVolumeIcon() {
+    function getVolumeIcon(): string {
         if (Services.Audio.muted) {
-            return "volume-x";
+            return "volume-mute-line";
         }
         if (Services.Audio.volume <= 0) {
-            return "volume-off";
+            return "volume-off-vibrate-line";
         }
-        if (Services.Audio.volume < 0.3) {
-            return "volume";
+        if (Services.Audio.volume < 0.65) {
+            return "volume-down-line";
         }
-        if (Services.Audio.volume >= 0.3 && Services.Audio.volume < 0.65) {
-            return "volume-1";
-        }
-        return "volume-2";
+        return "volume-up-line";
     }
 
     Connections {
@@ -130,7 +127,7 @@ AbstractButton {
             columnSpacing: textSpacing
 
             // Volume icon
-            LucideIcon {
+            RemixIcon {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: capsule.iconSize
                 Layout.preferredHeight: capsule.iconSize

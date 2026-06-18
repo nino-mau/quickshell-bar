@@ -71,7 +71,7 @@ AbstractButton {
             }
 
             // Weather icon
-            LucideIcon {
+            RemixIcon {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: capsule.iconSize
                 Layout.preferredHeight: capsule.iconSize
