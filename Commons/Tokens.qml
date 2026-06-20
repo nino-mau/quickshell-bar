@@ -48,6 +48,7 @@ Singleton {
     readonly property int radiusMD: 6
     readonly property int radiusLG: 8
     readonly property int radiusXL: 12
+    readonly property int radiusXLHalf: 14
     readonly property int radius2XL: 16
     readonly property int radius2XLHalf: 17
     readonly property int radius3XL: 24
