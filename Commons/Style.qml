@@ -14,7 +14,7 @@ import qs.Commons as Commons
 */
 Singleton {
     // Default corner radius used by generic surfaces (capsule, popups, bar).
-    readonly property int defaultRadius: Commons.Tokens.radiusLG
+    readonly property int defaultRadius: Commons.Tokens.radiusFull
 
     // Bar geometry, shared so popups/toasts can position relative to the bar.
     readonly property int barHeight: 44

@@ -21,7 +21,7 @@ PanelWindow {
     readonly property int barMargin: 16
     readonly property int barPadding: 8
     readonly property int barGap: 10
-    readonly property real barBackgroundOpacity: 0.85
+    readonly property real barBackgroundOpacity: 0.60
     readonly property color barBackgroundColor: Theme.withAlpha(Theme.bg1, barBackgroundOpacity)
 
     WlrLayershell.namespace: "quickshell-bar-" + (vertical ? "vert-" : "horiz-") + (screen ? screen.name : "unknown")
@@ -54,6 +54,8 @@ PanelWindow {
 
         background: Rectangle {
             radius: root.barRadius
+            // border.color: Theme.bg2
+            // border.width: 1
             color: root.barBackgroundColor
         }
 

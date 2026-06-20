@@ -28,6 +28,7 @@ Item {
     property real pulseOpacity: 0.5
     property int sizeAnimationDuration: 260
     property int colorAnimationDuration: 160
+
     property color activeColor: Theme.blue
     property color inactiveColor: Theme.bg2
     property color occupiedColor: Theme.bg3
