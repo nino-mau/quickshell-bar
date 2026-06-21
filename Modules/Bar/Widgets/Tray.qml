@@ -14,8 +14,9 @@ Item {
     property bool vertical: true
     readonly property int traySpacing: 8
     readonly property int crossSize: vertical ? width : height
-    readonly property int iconSize: Math.max(1, Math.round((crossSize > 0 ? crossSize : 30) * 0.60))
-    readonly property int horizontalIconSize: Math.max(1, Math.round((crossSize > 0 ? crossSize : 30) * 0.6))
+    readonly property real iconSizeRatio: 0.7
+    readonly property int iconSize: Math.max(1, Math.round((crossSize > 0 ? crossSize : 30) * iconSizeRatio))
+    readonly property int horizontalIconSize: Math.max(1, Math.round((crossSize > 0 ? crossSize : 30) * iconSizeRatio))
 
     Layout.fillWidth: root.vertical
     Layout.fillHeight: !root.vertical
