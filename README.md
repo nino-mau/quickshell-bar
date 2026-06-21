@@ -1,12 +1,12 @@
-# Quickshell Hyprland Bar
+# Quickshell Bar
 
 ![](./Assets/illustration.png)
 
-A simple, themeable bar built with [QML](https://doc.qt.io/qt-6/qtqml-documents-topic.html)/[Quickshell](https://quickshell.org/) for [Hyprland](https://hypr.land/). Runs horizontally (top/bottom) or vertically (left/right).
+A simple, themeable bar built with [QML](https://doc.qt.io/qt-6/qtqml-documents-topic.html)/[Quickshell](https://quickshell.org/) for Hyprland and Niri. Runs horizontally (top/bottom) or vertically (left/right).
 
 ## Features
 
-- Hyprland workspaces
+- Hyprland and Niri workspaces
 - Clock
 - System tray
 - Network and Bluetooth status
@@ -20,7 +20,7 @@ A simple, themeable bar built with [QML](https://doc.qt.io/qt-6/qtqml-documents-
 ## Requirements
 
 - `quickshell`
-- `hyprland`
+- `hyprland` or `niri`
 - `cava` — audio visualizer
 - `lm_sensors` — CPU temperature
 - `curl` — weather

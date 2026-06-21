@@ -32,6 +32,10 @@ PopupWindow {
     property bool grabsFocus: true
 
     readonly property bool vertical: Config.vertical
+    readonly property bool hyprlandActive: {
+        const signature = Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE");
+        return (signature !== undefined && signature !== null && signature.length > 0) || Hyprland.requestSocketPath.length > 0;
+    }
 
     anchor.edges: vertical ? Edges.Right : Edges.Bottom
     anchor.gravity: vertical ? Edges.Right : Edges.Bottom
@@ -42,7 +46,7 @@ PopupWindow {
     implicitHeight: contentHeight + shadowPadding * 2
     color: "transparent"
     visible: popupOpen || closing
-    grabFocus: false
+    grabFocus: root.popupOpen && root.grabsFocus && !root.hyprlandActive
 
     function open(): void {
         if (closeAnim.running) {
@@ -74,7 +78,7 @@ PopupWindow {
     }
 
     HyprlandFocusGrab {
-        active: root.popupOpen && root.grabsFocus
+        active: root.popupOpen && root.grabsFocus && root.hyprlandActive
         windows: [QsWindow.window]
 
         onCleared: root.close()
