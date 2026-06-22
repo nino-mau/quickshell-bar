@@ -34,7 +34,7 @@ Singleton {
         }
 
         const parts = loc.split(",").map(part => part.trim());
-        const params = ["latitude=" + parts[0], "longitude=" + parts[1], "current=temperature_2m,is_day,weather_code", "timezone=auto"];
+        const params = ["latitude=" + parts[0], "longitude=" + parts[1], "current=temperature_2m,is_day,weather_code", "timezone=auto", "models=best_match"];
 
         weatherProcess.command = ["curl", "--fail", "--silent", "--show-error", "--location", "--max-time", "12", "https://api.open-meteo.com/v1/forecast?" + params.join("&")];
         weatherProcess.running = true;
