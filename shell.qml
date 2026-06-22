@@ -6,6 +6,7 @@ import qs.Modules.Bar
 import qs.Modules.Notifications
 import qs.Modules.OSD
 import qs.Modules.Lock
+import qs.Modules.Session
 
 ShellRoot {
     BarScreens {}
@@ -13,6 +14,9 @@ ShellRoot {
     Osd {}
     Lock {
         id: lock
+    }
+    Session {
+        onLockRequested: lock.locked = true
     }
 
     Connections {
