@@ -15,6 +15,29 @@ AbstractButton {
     property bool square: false
     property bool vertical: true
 
+    // Hover-driven popup (open while either the widget or the popup is hovered).
+    property bool popupHovered: false
+    readonly property bool shouldShowPopup: Services.Media.hasPlayer && (root.hovered || root.popupHovered)
+
+    onShouldShowPopupChanged: {
+        if (shouldShowPopup) {
+            popupCloseTimer.stop();
+            mediaPopup.open();
+        } else {
+            popupCloseTimer.restart();
+        }
+    }
+
+    Timer {
+        id: popupCloseTimer
+        interval: 150
+        onTriggered: {
+            if (!root.shouldShowPopup) {
+                mediaPopup.close();
+            }
+        }
+    }
+
     readonly property int visualizerClipPadding: 4
 
     // Visualizer fill opacity, per orientation and playback state.
@@ -47,7 +70,7 @@ AbstractButton {
 
     onClicked: {
         if (Services.Media.hasPlayer) {
-            mediaPopup.toggle();
+            Services.Media.togglePlaying();
         }
     }
 
@@ -260,35 +283,88 @@ AbstractButton {
         readonly property int popupPadding: 14
 
         anchor.item: root
-        contentWidth: 224
-        contentHeight: popupBody.implicitHeight + popupPadding * 2
+        grabsFocus: false
+        radius: Tokens.radius2XL
+        contentWidth: 372
+        contentHeight: 156
 
-        ColumnLayout {
+        function formatTime(seconds: real): string {
+            if (!isFinite(seconds) || seconds < 0) {
+                return "0:00";
+            }
+            const total = Services.Media.trackLength;
+            const showHours = total >= 3600;
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            const pad = (n) => (n < 10 ? "0" + n : "" + n);
+            return showHours ? (h + ":" + pad(m) + ":" + pad(s)) : (m + ":" + pad(s));
+        }
+
+        // Blurred album-art backdrop (masked to the popup's rounded corners).
+        Item {
+            id: backdrop
+
+            anchors.fill: parent
+            visible: backdropImage.status === Image.Ready
+
+            Image {
+                id: backdropImage
+
+                anchors.fill: parent
+                source: Services.Media.artUrl
+                fillMode: Image.PreserveAspectCrop
+                asynchronous: true
+                cache: false
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    blurEnabled: true
+                    blur: 1.0
+                    blurMax: 48
+                }
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                color: Qt.rgba(0, 0, 0, 0.45)
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                maskEnabled: true
+                maskThresholdMin: 0.5
+                maskSource: ShaderEffectSource {
+                    sourceItem: Rectangle {
+                        width: backdrop.width
+                        height: backdrop.height
+                        radius: mediaPopup.radius
+                        color: "white"
+                    }
+                }
+            }
+        }
+
+        RowLayout {
             id: popupBody
 
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.fill: parent
             anchors.margins: mediaPopup.popupPadding
-            spacing: 9
+            spacing: 14
 
-            // Album art
-            Item {
-                Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: 196
-                Layout.preferredHeight: 110
+            // Album art — fills the full content height so its top/bottom
+            // margins match the rest of the popup.
+            Rectangle {
+                Layout.fillHeight: true
+                Layout.preferredWidth: height
+                radius: Tokens.radiusXL
+                color: Theme.withAlpha(Theme.bg2, 0.8)
 
-                Rectangle {
-                    anchors.fill: parent
-                    radius: Tokens.radiusLG
-                    color: Theme.bg2
-
-                    RemixIcon {
-                        anchors.centerIn: parent
-                        name: "music-line"
-                        size: 36
-                        color: Theme.withAlpha(Theme.fg, 0.5)
-                    }
+                RemixIcon {
+                    anchors.centerIn: parent
+                    name: "music-line"
+                    size: 40
+                    color: Theme.withAlpha(Theme.fg, 0.5)
+                    visible: cover.status !== Image.Ready
                 }
 
                 Image {
@@ -309,139 +385,244 @@ AbstractButton {
                             sourceItem: Rectangle {
                                 width: cover.width
                                 height: cover.height
-                                radius: Tokens.radiusLG
+                                radius: Tokens.radiusXL
                                 color: "white"
                             }
                         }
                     }
                 }
-            }
 
-            // Title
-            Text {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                text: Services.Media.title.length > 0 ? Services.Media.title : qsTr("Nothing playing")
-                color: Theme.fg
-                font.pixelSize: Tokens.textSM
-                font.weight: Tokens.fontBold
-                elide: Text.ElideRight
-            }
-
-            // Artist
-            Text {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                visible: Services.Media.artist.length > 0
-                text: Services.Media.artist
-                color: Theme.withAlpha(Theme.fg, 0.7)
-                font.pixelSize: Tokens.textXS
-                font.weight: Tokens.fontMedium
-                elide: Text.ElideRight
-            }
-
-            // Progress bar
-            Item {
-                Layout.fillWidth: true
-                Layout.topMargin: 2
-                Layout.preferredHeight: 4
-                visible: Services.Media.hasProgress
-
+                // Hairline border over the art.
                 Rectangle {
                     anchors.fill: parent
-                    radius: height / 2
-                    color: Theme.withAlpha(Theme.fg, 0.16)
-                }
-
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    width: parent.width * Services.Media.progress
-                    radius: height / 2
-                    color: Theme.blue
-
-                    Behavior on width {
-                        NumberAnimation {
-                            duration: 200
-                            easing.type: Easing.InOutQuad
-                        }
-                    }
+                    radius: Tokens.radiusXL
+                    color: "transparent"
+                    border.width: 1
+                    border.color: Theme.withAlpha(Theme.fg, 0.1)
                 }
             }
 
-            // Controls
-            RowLayout {
-                Layout.alignment: Qt.AlignHCenter
-                Layout.topMargin: 2
-                spacing: 16
+            // Info + controls
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignVCenter
+                spacing: 3
 
-                MouseArea {
-                    id: prevButton
+                Text {
+                    Layout.fillWidth: true
+                    text: Services.Media.title.length > 0 ? Services.Media.title : qsTr("Nothing playing")
+                    color: Theme.fg
+                    font.pixelSize: Tokens.textBase
+                    font.weight: Tokens.fontBold
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
+                }
 
-                    Layout.preferredWidth: 28
-                    Layout.preferredHeight: 28
-                    enabled: Services.Media.canGoPrevious
-                    hoverEnabled: true
-                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-                    onClicked: Services.Media.previous()
+                Text {
+                    Layout.fillWidth: true
+                    visible: Services.Media.artist.length > 0
+                    text: Services.Media.artist
+                    color: Theme.withAlpha(Theme.fg, 0.7)
+                    font.pixelSize: Tokens.textXS
+                    font.weight: Tokens.fontMedium
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
+                }
 
-                    RemixIcon {
-                        anchors.centerIn: parent
-                        name: "skip-back-line"
-                        size: 18
-                        color: prevButton.enabled ? Theme.fg : Theme.withAlpha(Theme.fg, 0.35)
+                Item {
+                    Layout.fillHeight: true
+                }
+
+                // Time labels
+                RowLayout {
+                    Layout.fillWidth: true
+                    visible: Services.Media.hasProgress
+
+                    Text {
+                        text: mediaPopup.formatTime(Services.Media.currentPosition)
+                        color: Theme.withAlpha(Theme.fg, 0.6)
+                        font.pixelSize: Tokens.textXS
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    Text {
+                        text: mediaPopup.formatTime(Services.Media.trackLength)
+                        color: Theme.withAlpha(Theme.fg, 0.6)
+                        font.pixelSize: Tokens.textXS
                     }
                 }
 
-                MouseArea {
-                    id: playButton
+                // Seek bar
+                Rectangle {
+                    id: seekTrack
 
-                    Layout.preferredWidth: 36
-                    Layout.preferredHeight: 36
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Services.Media.togglePlaying()
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 6
+                    Layout.bottomMargin: 4
+                    visible: Services.Media.hasProgress
+                    radius: height / 2
+                    color: Theme.withAlpha(Theme.fg, 0.18)
 
                     Rectangle {
-                        anchors.fill: parent
-                        radius: width / 2
-                        color: Theme.withAlpha(Theme.fg, playButton.containsMouse ? 0.16 : 0.10)
+                        id: seekFill
 
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: 140
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: parent.width * Services.Media.progress
+                        radius: height / 2
+                        color: root.baseColor
+
+                        Behavior on width {
+                            NumberAnimation {
+                                duration: 200
                                 easing.type: Easing.InOutQuad
                             }
                         }
                     }
 
-                    RemixIcon {
-                        anchors.centerIn: parent
-                        name: Services.Media.isPlaying ? "pause-fill" : "play-fill"
-                        size: 18
-                        color: Theme.fg
+                    Rectangle {
+                        x: seekFill.width - width / 2
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 13
+                        height: 13
+                        radius: width / 2
+                        color: root.baseColor
+                        visible: seekArea.containsMouse || seekArea.pressed
+                    }
+
+                    MouseArea {
+                        id: seekArea
+
+                        anchors.fill: parent
+                        anchors.margins: -8
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+
+                        function seek(mouseX: real): void {
+                            const player = Services.Media.player;
+                            if (!player || !player.canSeek) {
+                                return;
+                            }
+                            const ratio = Math.max(0, Math.min(1, mouseX / seekTrack.width));
+                            player.position = ratio * Services.Media.trackLength;
+                        }
+
+                        onPressed: mouse => seek(mouse.x)
+                        onPositionChanged: mouse => {
+                            if (pressed) {
+                                seek(mouse.x);
+                            }
+                        }
                     }
                 }
 
-                MouseArea {
-                    id: nextButton
+                // Controls
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter
+                    spacing: 12
 
-                    Layout.preferredWidth: 28
-                    Layout.preferredHeight: 28
-                    enabled: Services.Media.canGoNext
-                    hoverEnabled: true
-                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-                    onClicked: Services.Media.next()
+                    MouseArea {
+                        id: prevButton
 
-                    RemixIcon {
-                        anchors.centerIn: parent
-                        name: "skip-forward-line"
-                        size: 18
-                        color: nextButton.enabled ? Theme.fg : Theme.withAlpha(Theme.fg, 0.35)
+                        Layout.preferredWidth: 36
+                        Layout.preferredHeight: 36
+                        enabled: Services.Media.canGoPrevious
+                        hoverEnabled: true
+                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: Services.Media.previous()
+
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: width / 2
+                            color: Theme.withAlpha(Theme.fg, prevButton.containsMouse && prevButton.enabled ? 0.12 : 0)
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 140
+                                }
+                            }
+                        }
+
+                        RemixIcon {
+                            anchors.centerIn: parent
+                            name: "skip-back-fill"
+                            size: 18
+                            color: prevButton.enabled ? Theme.fg : Theme.withAlpha(Theme.fg, 0.35)
+                        }
+                    }
+
+                    MouseArea {
+                        id: playButton
+
+                        Layout.preferredWidth: 44
+                        Layout.preferredHeight: 44
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: Services.Media.togglePlaying()
+
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: width / 2
+                            color: Theme.withAlpha(root.baseColor, playButton.containsMouse ? 0.30 : 0.20)
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 140
+                                }
+                            }
+                        }
+
+                        RemixIcon {
+                            anchors.centerIn: parent
+                            name: Services.Media.isPlaying ? "pause-fill" : "play-fill"
+                            size: 20
+                            color: Theme.fg
+                        }
+                    }
+
+                    MouseArea {
+                        id: nextButton
+
+                        Layout.preferredWidth: 36
+                        Layout.preferredHeight: 36
+                        enabled: Services.Media.canGoNext
+                        hoverEnabled: true
+                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: Services.Media.next()
+
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: width / 2
+                            color: Theme.withAlpha(Theme.fg, nextButton.containsMouse && nextButton.enabled ? 0.12 : 0)
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 140
+                                }
+                            }
+                        }
+
+                        RemixIcon {
+                            anchors.centerIn: parent
+                            name: "skip-forward-fill"
+                            size: 18
+                            color: nextButton.enabled ? Theme.fg : Theme.withAlpha(Theme.fg, 0.35)
+                        }
                     }
                 }
             }
+        }
+
+        // Keep the popup open while the pointer is over it.
+        HoverHandler {
+            id: popupHoverHandler
+            onHoveredChanged: root.popupHovered = hovered
         }
     }
 }
