@@ -38,7 +38,7 @@ Variants {
             readonly property real backgroundOpacity: 0.6
             readonly property int borderWidth: Tokens.border1
             readonly property color border: Theme.border
-            readonly property color background: Theme.bg0
+            readonly property color background: Theme.bg1
             readonly property color color: Theme.withAlpha(background, backgroundOpacity)
             readonly property int closeButtonSize: Tokens.space5
             readonly property int closeTextSize: Tokens.textLG
