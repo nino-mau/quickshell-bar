@@ -63,6 +63,7 @@ Item {
         contentHeight: popupBody.implicitHeight + pad * 2
         anchor.item: root
         grabsFocus: false
+        radius: Tokens.radius2XL
 
         Column {
             id: popupBody
