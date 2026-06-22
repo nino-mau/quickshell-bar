@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Widgets
 import qs.Commons
 import qs.Services as Services
 
@@ -16,7 +17,7 @@ AbstractButton {
     readonly property bool hasUpdates: Services.Updates.hasUpdates
     readonly property bool checking: Services.Updates.loading
     readonly property bool installing: Services.Updates.updating
-    readonly property color accentColor: installing ? Theme.blue : capsule.textColor
+    readonly property color accentColor: capsule.textColor
 
     // One distinct icon per state: installing > available > checking > up to date.
     // "available" outranks "checking" so a background re-check never disturbs the
@@ -61,6 +62,59 @@ AbstractButton {
         vertical: root.vertical
         baseColor: root.baseColor
         hovered: root.hovered || root.down
+
+        // Indeterminate activity sweep: a soft highlight band travels along the
+        // capsule on a loop while an upgrade is running, clipped to the pill so
+        // it reads as a job in progress. Sits above the fill, behind the icon.
+        ClippingRectangle {
+            id: sweepClip
+
+            anchors.fill: parent
+            anchors.margins: 1 // stay inside the capsule's hairline border
+            radius: capsule.radius
+            color: "transparent"
+            visible: root.installing
+
+            Rectangle {
+                id: sweepBand
+
+                // Track the capsule's own accent so the sweep matches the
+                // widget's colour rather than a fixed blue.
+                readonly property color sweepColor: capsule.textColor
+
+                height: sweepClip.height
+                width: Math.max(28, sweepClip.width * 0.45)
+
+                // Same hue at both edges (alpha 0) so the fade doesn't tint
+                // toward black as it interpolates.
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop {
+                        position: 0.0
+                        color: Theme.withAlpha(sweepBand.sweepColor, 0)
+                    }
+                    GradientStop {
+                        position: 0.5
+                        color: Theme.withAlpha(sweepBand.sweepColor, 0.28)
+                    }
+                    GradientStop {
+                        position: 1.0
+                        color: Theme.withAlpha(sweepBand.sweepColor, 0)
+                    }
+                }
+
+                NumberAnimation {
+                    target: sweepBand
+                    property: "x"
+                    from: -sweepBand.width
+                    to: sweepClip.width
+                    duration: 1100
+                    loops: Animation.Infinite
+                    running: root.installing
+                    easing.type: Easing.InOutSine
+                }
+            }
+        }
     }
 
     contentItem: Item {
@@ -110,27 +164,30 @@ AbstractButton {
                     onStopped: updatesIcon.rotation = 0
                 }
 
-                // Pulse the archive icon while an upgrade is downloading/installing.
+                // Bob the cloud icon while an upgrade is downloading/installing:
+                // a gentle dip that settles back with a slight overshoot, like
+                // it's pulling packages in. Drives verticalOffset so the motion
+                // doesn't fight the GridLayout.
                 SequentialAnimation {
                     running: root.installing
                     loops: Animation.Infinite
-                    onStopped: updatesIcon.opacity = 1
+                    onStopped: updatesIcon.verticalOffset = 0
 
                     NumberAnimation {
                         target: updatesIcon
-                        property: "opacity"
-                        from: 1
-                        to: 0.4
-                        duration: 600
+                        property: "verticalOffset"
+                        from: 0
+                        to: 3
+                        duration: 500
                         easing.type: Easing.InOutSine
                     }
                     NumberAnimation {
                         target: updatesIcon
-                        property: "opacity"
-                        from: 0.4
-                        to: 1
-                        duration: 600
-                        easing.type: Easing.InOutSine
+                        property: "verticalOffset"
+                        from: 3
+                        to: 0
+                        duration: 500
+                        easing.type: Easing.OutBack
                     }
                 }
 
