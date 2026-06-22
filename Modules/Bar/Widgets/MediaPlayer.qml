@@ -313,6 +313,11 @@ AbstractButton {
 
                 anchors.fill: parent
                 source: Services.Media.artUrl
+                // Heavily blurred, so a small decode is indistinguishable from a
+                // full-res one — cap it to keep MPRIS art (often 1000px+) from
+                // sitting in VRAM at native size.
+                sourceSize.width: 256
+                sourceSize.height: 256
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
                 cache: false
@@ -320,7 +325,7 @@ AbstractButton {
                 layer.effect: MultiEffect {
                     blurEnabled: true
                     blur: 1.0
-                    blurMax: 48
+                    blurMax: 32
                 }
             }
 
@@ -372,6 +377,10 @@ AbstractButton {
 
                     anchors.fill: parent
                     source: Services.Media.artUrl
+                    // Rendered ~128px square; 256 keeps it crisp on HiDPI while
+                    // capping the decoded texture.
+                    sourceSize.width: 256
+                    sourceSize.height: 256
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                     cache: false
