@@ -16,23 +16,23 @@ Item {
     property int workspaceCount: 5
 
     property var workspaceIcons: ["terminal-line", "firefox-fill", "terminal-line", "shapes-fill", "layout-2-fill"]
-    property int workspaceWidth: 22
-    property int workspaceInactiveHeight: 22
-    property int workspaceActiveHeight: 35
-    property int workspaceGap: 5
-    property int workspaceRadius: Tokens.radiusFull
+    // Cross-axis thickness (height on a horizontal bar) and along-axis length of
+    // each workspace cell. Cells sit flush (no gap) so occupied surfaces can
+    // merge into one connected pill, stormy-style.
+    property int workspaceWidth: 24
+    property int cellLength: 28
+    property int workspaceGap: 6
+    readonly property int stride: cellLength + workspaceGap
+    property int workspaceRadius: Style.defaultRadius
     property int workspaceIconSize: 15
-    property real activeIconOpacity: 1
-    property real inactiveIconOpacity: 0
-    property int pulseSize: 14
-    property int pulseBorderWidth: 2
-    property real pulseOpacity: 0.5
-    property int sizeAnimationDuration: 260
+    property int slideAnimationDuration: 280
     property int colorAnimationDuration: 160
+    property int pulseSize: 12
+    property real pulseOpacity: 0.45
 
     property color activeColor: Theme.blue
-    property color inactiveColor: Theme.bg2
-    property color occupiedColor: Theme.bg3
+    property color occupiedColor: Theme.withAlpha(Theme.fg, 0.22)
+    property color emptyColor: Theme.withAlpha(Theme.fg, 0.08)
     property color activeTextColor: Theme.bg1
     property color inactiveTextColor: Theme.fg
 
@@ -267,17 +267,139 @@ Item {
         return workspaceIcons[workspaceId - 1] || workspaceIcons[0] || "terminal-line";
     }
 
-    GridLayout {
+    // A workspace renders a "filled" surface when it has windows and lives on
+    // this monitor. Used both for the connected occupied background and to pick
+    // icon colors.
+    function workspaceFilled(workspaceId: int): bool {
+        return workspaceOccupied(workspaceId) && !workspaceOnOtherMonitor(workspaceId);
+    }
+
+    Item {
         id: layout
 
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-        }
-        columns: root.vertical ? 1 : 99
-        rowSpacing: root.workspaceGap
-        columnSpacing: root.workspaceGap
+        anchors.centerIn: parent
 
+        readonly property int totalLength: root.effectiveWorkspaceCount * root.stride - root.workspaceGap
+
+        implicitWidth: root.vertical ? root.workspaceWidth : totalLength
+        implicitHeight: root.vertical ? totalLength : root.workspaceWidth
+
+        function cellX(index: int): int {
+            return root.vertical ? 0 : index * root.stride;
+        }
+        function cellY(index: int): int {
+            return root.vertical ? index * root.stride : 0;
+        }
+
+        readonly property int activeIndex: root.activeWorkspaceId - 1
+
+        // Layer 1: a base pill per workspace — brighter when occupied, faint
+        // when empty. The active one is covered by the accent indicator above.
+        Repeater {
+            model: root.effectiveWorkspaceCount
+
+            Rectangle {
+                required property int index
+
+                readonly property int workspaceId: index + 1
+                readonly property bool filled: root.workspaceFilled(workspaceId)
+
+                x: layout.cellX(index)
+                y: layout.cellY(index)
+                width: root.vertical ? root.workspaceWidth : root.cellLength
+                height: root.vertical ? root.cellLength : root.workspaceWidth
+                radius: root.workspaceRadius
+                color: filled ? root.occupiedColor : root.emptyColor
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: root.colorAnimationDuration
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
+        }
+
+        // Layer 2: a single accent pill that slides to the active workspace,
+        // with a one-shot pulse ring when it lands.
+        Rectangle {
+            id: indicator
+
+            property real pulse: 0
+
+            visible: layout.activeIndex >= 0 && layout.activeIndex < root.effectiveWorkspaceCount
+            x: layout.cellX(layout.activeIndex)
+            y: layout.cellY(layout.activeIndex)
+            width: root.vertical ? root.workspaceWidth : root.cellLength
+            height: root.vertical ? root.cellLength : root.workspaceWidth
+            radius: root.workspaceRadius
+            color: root.activeColor
+
+            onXChanged: activationPulse.restart()
+            onYChanged: activationPulse.restart()
+
+            // True once the pill has actually reached the active cell. Tied to
+            // position (not the animation's running flag) so the icon shows the
+            // instant the colour settles, despite the OutCubic deceleration tail.
+            readonly property bool atTarget: Math.abs(x - layout.cellX(layout.activeIndex)) <= 4 && Math.abs(y - layout.cellY(layout.activeIndex)) <= 4
+
+            Behavior on x {
+                NumberAnimation {
+                    duration: root.slideAnimationDuration
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Behavior on y {
+                NumberAnimation {
+                    duration: root.slideAnimationDuration
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+            Rectangle {
+                anchors.centerIn: parent
+                width: parent.width + indicator.pulse * root.pulseSize
+                height: parent.height + indicator.pulse * root.pulseSize
+                radius: height / 2
+                color: "transparent"
+                border.color: root.activeColor
+                border.width: Math.max(1, Math.round(2 * (1 - indicator.pulse)))
+                opacity: (1 - indicator.pulse) * root.pulseOpacity
+                visible: indicator.pulse > 0
+            }
+
+            // The icon is hidden while the pill slides and fades in only once it
+            // has reached the active workspace, so it never appears ahead of the
+            // colour or visibly travels.
+            RemixIcon {
+                anchors.centerIn: parent
+                name: root.workspaceIconName(root.activeWorkspaceId)
+                size: root.workspaceIconSize
+                color: root.activeTextColor
+                // No fade — appear instantly the moment the pill lands.
+                visible: indicator.atTarget
+            }
+
+            SequentialAnimation {
+                id: activationPulse
+
+                NumberAnimation {
+                    target: indicator
+                    property: "pulse"
+                    from: 0
+                    to: 1
+                    duration: root.slideAnimationDuration
+                    easing.type: Easing.OutCubic
+                }
+                PropertyAction {
+                    target: indicator
+                    property: "pulse"
+                    value: 0
+                }
+            }
+        }
+
+        // Layer 3: per-workspace icon + click target.
         Repeater {
             model: root.effectiveWorkspaceCount
 
@@ -288,104 +410,33 @@ Item {
 
                 readonly property int workspaceId: index + 1
                 readonly property bool active: root.activeWorkspaceId === workspaceId
-                readonly property bool occupied: root.workspaceOccupied(workspaceId)
-                readonly property bool onOtherMonitor: root.workspaceOnOtherMonitor(workspaceId)
-                readonly property color buttonColor: active ? root.activeColor : occupied && !onOtherMonitor ? root.occupiedColor : root.inactiveColor
-                property real pulse: 0
+                readonly property bool filled: root.workspaceFilled(workspaceId)
 
-                readonly property int workspaceLength: active ? root.workspaceActiveHeight : root.workspaceInactiveHeight
+                x: layout.cellX(index)
+                y: layout.cellY(index)
+                width: root.vertical ? root.workspaceWidth : root.cellLength
+                height: root.vertical ? root.cellLength : root.workspaceWidth
 
-                Layout.preferredWidth: root.vertical ? root.workspaceWidth : workspaceLength
-                Layout.preferredHeight: root.vertical ? workspaceLength : root.workspaceWidth
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 Accessible.role: Accessible.Button
                 Accessible.name: qsTr("Workspace %1").arg(workspaceId)
 
                 onClicked: root.switchToWorkspace(workspaceId)
-                onActiveChanged: {
-                    if (active) {
-                        activationPulse.restart();
-                    }
-                }
 
-                Behavior on Layout.preferredWidth {
-                    NumberAnimation {
-                        duration: root.sizeAnimationDuration
-                        easing.type: Easing.OutCubic
-                    }
-                }
-
-                Behavior on Layout.preferredHeight {
-                    NumberAnimation {
-                        duration: root.sizeAnimationDuration
-                        easing.type: Easing.OutCubic
-                    }
-                }
-
+                // Faint hover surface for inactive workspaces.
                 Rectangle {
                     anchors.fill: parent
                     radius: root.workspaceRadius
-                    color: workspaceButton.buttonColor
+                    color: Theme.withAlpha(Theme.fg, 0.08)
+                    visible: !workspaceButton.active
+                    opacity: workspaceButton.containsMouse ? 1 : 0
 
-                    Behavior on color {
-                        ColorAnimation {
+                    Behavior on opacity {
+                        NumberAnimation {
                             duration: root.colorAnimationDuration
                             easing.type: Easing.InOutQuad
                         }
-                    }
-
-                    Rectangle {
-                        anchors.centerIn: parent
-                        width: parent.width + workspaceButton.pulse * root.pulseSize
-                        height: parent.height + workspaceButton.pulse * root.pulseSize
-                        radius: width / 2
-                        color: "transparent"
-                        border.color: root.activeColor
-                        border.width: Math.max(1, Math.round(root.pulseBorderWidth * (1 - workspaceButton.pulse)))
-                        opacity: (1 - workspaceButton.pulse) * root.pulseOpacity
-                        visible: workspaceButton.pulse > 0
-                    }
-
-                    RemixIcon {
-                        anchors.centerIn: parent
-                        name: root.workspaceIconName(workspaceButton.workspaceId)
-                        color: workspaceButton.active ? root.activeTextColor : root.inactiveTextColor
-                        opacity: workspaceButton.active ? root.activeIconOpacity : root.inactiveIconOpacity
-                        size: root.workspaceIconSize
-
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: root.colorAnimationDuration
-                                easing.type: Easing.InOutQuad
-                            }
-                        }
-
-                        Behavior on opacity {
-                            NumberAnimation {
-                                duration: root.colorAnimationDuration
-                                easing.type: Easing.InOutQuad
-                            }
-                        }
-                    }
-                }
-
-                SequentialAnimation {
-                    id: activationPulse
-
-                    NumberAnimation {
-                        target: workspaceButton
-                        property: "pulse"
-                        from: 0
-                        to: 1
-                        duration: root.sizeAnimationDuration
-                        easing.type: Easing.OutCubic
-                    }
-
-                    PropertyAction {
-                        target: workspaceButton
-                        property: "pulse"
-                        value: 0
                     }
                 }
             }
