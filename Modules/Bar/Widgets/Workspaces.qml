@@ -18,11 +18,9 @@ Item {
     property var workspaceIcons: ["terminal-line", "firefox-fill", "terminal-line", "shapes-fill", "layout-2-fill"]
     // Cross-axis thickness (height on a horizontal bar) and along-axis length of
     // each workspace cell. Cells sit flush (no gap) so occupied surfaces can
-    // merge into one connected pill, stormy-style.
+    // merge into one connected track, stormy-style.
     property int workspaceWidth: 24
-    property int cellLength: 28
-    property int workspaceGap: 6
-    readonly property int stride: cellLength + workspaceGap
+    property int cellLength: 30
     property int workspaceRadius: Style.defaultRadius
     property int workspaceIconSize: 15
     property int slideAnimationDuration: 280
@@ -31,10 +29,11 @@ Item {
     property real pulseOpacity: 0.45
 
     property color activeColor: Theme.blue
-    property color occupiedColor: Theme.withAlpha(Theme.fg, 0.22)
-    property color emptyColor: Theme.withAlpha(Theme.fg, 0.08)
+    // Subtle connected surface drawn behind occupied workspaces.
+    property color occupiedSurface: Theme.withAlpha(Theme.fg, 0.10)
     property color activeTextColor: Theme.bg1
-    property color inactiveTextColor: Theme.fg
+    property color occupiedTextColor: Theme.fg
+    property color emptyTextColor: Theme.withAlpha(Theme.fg, 0.40)
 
     property int compositorRevision: 0
 
@@ -279,22 +278,22 @@ Item {
 
         anchors.centerIn: parent
 
-        readonly property int totalLength: root.effectiveWorkspaceCount * root.stride - root.workspaceGap
+        // Flush cells form one continuous track so occupied surfaces can merge.
+        readonly property int totalLength: root.effectiveWorkspaceCount * root.cellLength
+        readonly property int activeIndex: root.activeWorkspaceId - 1
 
         implicitWidth: root.vertical ? root.workspaceWidth : totalLength
         implicitHeight: root.vertical ? totalLength : root.workspaceWidth
 
         function cellX(index: int): int {
-            return root.vertical ? 0 : index * root.stride;
+            return root.vertical ? 0 : index * root.cellLength;
         }
         function cellY(index: int): int {
-            return root.vertical ? index * root.stride : 0;
+            return root.vertical ? index * root.cellLength : 0;
         }
 
-        readonly property int activeIndex: root.activeWorkspaceId - 1
-
-        // Layer 1: a base pill per workspace — brighter when occupied, faint
-        // when empty. The active one is covered by the accent indicator above.
+        // Layer 1: connected occupied surface. Adjacent occupied workspaces
+        // merge into one continuous track by squaring off their shared edges.
         Repeater {
             model: root.effectiveWorkspaceCount
 
@@ -303,13 +302,22 @@ Item {
 
                 readonly property int workspaceId: index + 1
                 readonly property bool filled: root.workspaceFilled(workspaceId)
+                readonly property bool squareStart: filled && index > 0 && root.workspaceFilled(workspaceId - 1)
+                readonly property bool squareEnd: filled && index < root.effectiveWorkspaceCount - 1 && root.workspaceFilled(workspaceId + 1)
 
                 x: layout.cellX(index)
                 y: layout.cellY(index)
                 width: root.vertical ? root.workspaceWidth : root.cellLength
                 height: root.vertical ? root.cellLength : root.workspaceWidth
-                radius: root.workspaceRadius
-                color: filled ? root.occupiedColor : root.emptyColor
+
+                color: filled ? root.occupiedSurface : "transparent"
+
+                readonly property int r: root.workspaceRadius
+                // "start" = toward the previous cell (left/top), "end" = next.
+                topLeftRadius: squareStart ? 0 : r
+                topRightRadius: (root.vertical ? squareStart : squareEnd) ? 0 : r
+                bottomLeftRadius: (root.vertical ? squareEnd : squareStart) ? 0 : r
+                bottomRightRadius: squareEnd ? 0 : r
 
                 Behavior on color {
                     ColorAnimation {
@@ -317,6 +325,10 @@ Item {
                         easing.type: Easing.InOutQuad
                     }
                 }
+                Behavior on topLeftRadius { NumberAnimation { duration: root.colorAnimationDuration } }
+                Behavior on topRightRadius { NumberAnimation { duration: root.colorAnimationDuration } }
+                Behavior on bottomLeftRadius { NumberAnimation { duration: root.colorAnimationDuration } }
+                Behavior on bottomRightRadius { NumberAnimation { duration: root.colorAnimationDuration } }
             }
         }
 
@@ -337,11 +349,6 @@ Item {
 
             onXChanged: activationPulse.restart()
             onYChanged: activationPulse.restart()
-
-            // True once the pill has actually reached the active cell. Tied to
-            // position (not the animation's running flag) so the icon shows the
-            // instant the colour settles, despite the OutCubic deceleration tail.
-            readonly property bool atTarget: Math.abs(x - layout.cellX(layout.activeIndex)) <= 4 && Math.abs(y - layout.cellY(layout.activeIndex)) <= 4
 
             Behavior on x {
                 NumberAnimation {
@@ -368,18 +375,6 @@ Item {
                 visible: indicator.pulse > 0
             }
 
-            // The icon is hidden while the pill slides and fades in only once it
-            // has reached the active workspace, so it never appears ahead of the
-            // colour or visibly travels.
-            RemixIcon {
-                anchors.centerIn: parent
-                name: root.workspaceIconName(root.activeWorkspaceId)
-                size: root.workspaceIconSize
-                color: root.activeTextColor
-                // No fade — appear instantly the moment the pill lands.
-                visible: indicator.atTarget
-            }
-
             SequentialAnimation {
                 id: activationPulse
 
@@ -399,7 +394,8 @@ Item {
             }
         }
 
-        // Layer 3: per-workspace icon + click target.
+        // Layer 3: every workspace shows its icon, coloured by state (active /
+        // occupied / empty); also the click target.
         Repeater {
             model: root.effectiveWorkspaceCount
 
@@ -424,18 +420,25 @@ Item {
 
                 onClicked: root.switchToWorkspace(workspaceId)
 
-                // Faint hover surface for inactive workspaces.
-                Rectangle {
-                    anchors.fill: parent
-                    radius: root.workspaceRadius
-                    color: Theme.withAlpha(Theme.fg, 0.08)
-                    visible: !workspaceButton.active
-                    opacity: workspaceButton.containsMouse ? 1 : 0
+                RemixIcon {
+                    anchors.centerIn: parent
+                    name: root.workspaceIconName(workspaceButton.workspaceId)
+                    size: root.workspaceIconSize
+                    color: workspaceButton.active ? root.activeTextColor : workspaceButton.filled ? root.occupiedTextColor : root.emptyTextColor
+                    // Lift idle icons a touch on hover.
+                    opacity: workspaceButton.active || workspaceButton.filled || workspaceButton.containsMouse ? 1 : 0.85
+                    scale: workspaceButton.containsMouse && !workspaceButton.active ? 1.12 : 1
 
-                    Behavior on opacity {
-                        NumberAnimation {
+                    Behavior on color {
+                        ColorAnimation {
                             duration: root.colorAnimationDuration
                             easing.type: Easing.InOutQuad
+                        }
+                    }
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: root.colorAnimationDuration
+                            easing.type: Easing.OutBack
                         }
                     }
                 }
