@@ -15,7 +15,7 @@ Item {
     property bool vertical: true
     property int workspaceCount: 5
 
-    property var workspaceIcons: ["terminal-line", "firefox-fill", "terminal-line", "shapes-fill", "layout-2-fill"]
+    property var workspaceIcons: ["terminal-line", "firefox-fill", "mac-line", "shapes-fill", "layout-2-fill"]
     // Cross-axis thickness (height on a horizontal bar) and along-axis length of
     // each workspace cell. Cells sit flush (no gap) so occupied surfaces can
     // merge into one connected track, stormy-style.
@@ -58,12 +58,16 @@ Item {
             return -1;
         }
 
-        const monitor = Hyprland.monitorFor(root.screen);
-        if (monitor && monitor.activeWorkspace) {
-            return monitor.activeWorkspace.id;
+        // Follow the globally focused workspace, not just this monitor's active
+        // one, so a workspace pinned to another monitor still lights its pill on
+        // every bar when you switch to it. Falls back to the per-monitor active
+        // workspace if there's no global focus yet.
+        if (Hyprland.focusedWorkspace) {
+            return Hyprland.focusedWorkspace.id;
         }
 
-        return Hyprland.focusedWorkspace ? Hyprland.focusedWorkspace.id : -1;
+        const monitor = Hyprland.monitorFor(root.screen);
+        return monitor && monitor.activeWorkspace ? monitor.activeWorkspace.id : -1;
     }
 
     Layout.fillWidth: false
@@ -325,10 +329,26 @@ Item {
                         easing.type: Easing.InOutQuad
                     }
                 }
-                Behavior on topLeftRadius { NumberAnimation { duration: root.colorAnimationDuration } }
-                Behavior on topRightRadius { NumberAnimation { duration: root.colorAnimationDuration } }
-                Behavior on bottomLeftRadius { NumberAnimation { duration: root.colorAnimationDuration } }
-                Behavior on bottomRightRadius { NumberAnimation { duration: root.colorAnimationDuration } }
+                Behavior on topLeftRadius {
+                    NumberAnimation {
+                        duration: root.colorAnimationDuration
+                    }
+                }
+                Behavior on topRightRadius {
+                    NumberAnimation {
+                        duration: root.colorAnimationDuration
+                    }
+                }
+                Behavior on bottomLeftRadius {
+                    NumberAnimation {
+                        duration: root.colorAnimationDuration
+                    }
+                }
+                Behavior on bottomRightRadius {
+                    NumberAnimation {
+                        duration: root.colorAnimationDuration
+                    }
+                }
             }
         }
 
