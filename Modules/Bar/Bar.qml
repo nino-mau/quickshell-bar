@@ -54,9 +54,10 @@ PanelWindow {
 
         background: Rectangle {
             radius: root.barRadius
-            // border.color: Theme.bg2
-            // border.width: 1
             color: root.barBackgroundColor
+            // Subtle hairline edge for definition (Material-3 style surface outline).
+            border.width: 1
+            border.color: Theme.withAlpha(Theme.bg4, 0.35)
         }
 
         contentItem: Loader {

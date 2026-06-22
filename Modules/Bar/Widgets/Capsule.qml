@@ -44,6 +44,7 @@ Rectangle {
     property color backgroundColor: getCapsuleBackgroundColor()
     property color hoverBackgroundColor: getCapsuleHoverBackgroundColor()
     property color textColor: getCapsuleTextColor()
+    property color borderColor: getCapsuleBorderColor()
 
     Layout.fillWidth: true
     Layout.preferredHeight: root.square ? (root.width > 0 ? root.width : root.capsuleHeight) : root.capsuleHeight
@@ -52,6 +53,16 @@ Rectangle {
     implicitHeight: root.capsuleHeight
     radius: capsuleRadius
     color: hovered ? hoverBackgroundColor : backgroundColor
+    border.width: 1
+    border.color: borderColor
+
+    function getCapsuleBorderColor(): color {
+        if (root.baseColor === defaultBaseColor) {
+            return Theme.withAlpha(Theme.bg4, root.hovered ? 0.55 : 0.32);
+        } else {
+            return Theme.withAlpha(root.baseColor, root.hovered ? 0.40 : 0.22);
+        }
+    }
 
     function getCapsuleBackgroundColor(): color {
         if (root.baseColor === defaultBaseColor) {
@@ -78,6 +89,13 @@ Rectangle {
     }
 
     Behavior on color {
+        ColorAnimation {
+            duration: root.colorAnimationDuration
+            easing.type: Easing.InOutQuad
+        }
+    }
+
+    Behavior on border.color {
         ColorAnimation {
             duration: root.colorAnimationDuration
             easing.type: Easing.InOutQuad
