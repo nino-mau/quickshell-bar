@@ -7,7 +7,7 @@ import Quickshell.Wayland
 import qs.Commons
 import qs.Services as Services
 
-// Simple on-screen-display for volume changes. Pops a pill near the bar edge
+// Simple on-screen-display for volume changes. Pops a pill near the top center
 // whenever the output volume or mute state changes, then auto-hides. Styled to
 // match the notification toasts (see NotificationPopups.qml).
 Variants {
@@ -69,12 +69,10 @@ Variants {
 
         anchors {
             top: true
-            right: true
         }
 
         margins {
             top: window.topOffset
-            right: Style.barMarginX
         }
 
         function trigger(): void {
@@ -116,7 +114,7 @@ Variants {
             id: pill
 
             anchors.top: parent.top
-            anchors.right: parent.right
+            anchors.horizontalCenter: parent.horizontalCenter
             width: window.popupWidth
             implicitHeight: content.implicitHeight + osd.contentPadding * 2
             radius: osd.radius
