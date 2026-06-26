@@ -77,6 +77,9 @@ Item {
         Widgets.Network {
             baseColor: Theme.bg2
         }
+        Widgets.Battery {
+            baseColor: Theme.bg2
+        }
         Widgets.Volume {
             baseColor: Theme.bg2
         }

@@ -85,6 +85,10 @@ Item {
             vertical: false
             baseColor: Theme.purple
         }
+        Widgets.Battery {
+            vertical: false
+            baseColor: Theme.green
+        }
         Widgets.Volume {
             vertical: false
             baseColor: Theme.red
